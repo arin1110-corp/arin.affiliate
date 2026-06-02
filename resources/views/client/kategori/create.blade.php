@@ -5,15 +5,30 @@
 
 @section('content')
 
+<div class="mb-6">
+    <h1 class="text-2xl font-bold">Tambah Kategori</h1>
+    <p class="text-sm text-gray-500 mt-1">
+        Buat kategori agar produk affiliate kamu lebih rapi di website.
+    </p>
+</div>
+
+@if($errors->any())
+    <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl">
+        {{ $errors->first() }}
+    </div>
+@endif
+
 <form method="POST"
       action="{{ route('client.kategori.store') }}"
       enctype="multipart/form-data"
-      class="bg-white rounded-3xl shadow p-6 space-y-6">
+      class="bg-white/80 backdrop-blur-xl border theme-border rounded-3xl shadow p-6 space-y-6">
 
     @csrf
 
     <div>
-        <label class="text-sm font-medium text-gray-600">Nama Kategori <span class="text-red-500">*</span></label>
+        <label class="text-sm font-medium text-gray-600">
+            Nama Kategori <span class="text-red-500">*</span>
+        </label>
         <input type="text"
                name="kategori_nama"
                value="{{ old('kategori_nama') }}"
@@ -27,7 +42,9 @@
         <input type="file"
                name="kategori_thumbnail"
                class="w-full mt-1 p-3 rounded-xl border border-gray-200 bg-white">
-        <p class="text-xs text-gray-400 mt-1">Opsional. Gambar kategori agar tampilan lebih menarik.</p>
+        <p class="text-xs text-gray-400 mt-1">
+            Opsional. Gambar kategori agar tampilan lebih menarik.
+        </p>
     </div>
 
     <div>
@@ -38,7 +55,7 @@
                   class="w-full mt-1 p-3 rounded-xl border border-gray-200">{{ old('kategori_deskripsi') }}</textarea>
     </div>
 
-    <label class="flex items-center gap-2 bg-pink-50 border border-pink-100 rounded-2xl p-4">
+    <label class="flex items-center gap-2 theme-soft border theme-border rounded-2xl p-4">
         <input type="checkbox"
                name="kategori_is_visible"
                value="1"
@@ -81,9 +98,16 @@
 
     <input type="hidden" name="kategori_is_active" value="1">
 
-    <button class="bg-pink-600 text-white px-6 py-3 rounded-2xl">
-        Simpan Kategori
-    </button>
+    <div class="flex flex-col sm:flex-row gap-3">
+        <button class="theme-button px-6 py-3 rounded-2xl">
+            Simpan Kategori
+        </button>
+
+        <a href="{{ route('client.kategori.index') }}"
+           class="bg-slate-100 text-slate-700 px-6 py-3 rounded-2xl text-center">
+            Batal
+        </a>
+    </div>
 
 </form>
 

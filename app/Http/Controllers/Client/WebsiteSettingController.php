@@ -3,40 +3,20 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Models\ModelUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class OnboardingController extends Controller
+class WebsiteSettingController extends Controller
 {
-    public function verifyNotice()
+    public function index()
     {
         $user = Auth::guard('arin')->user();
 
-        return view('client.onboarding.verify', compact('user'));
+        return view('client.setting.index', compact('user'));
     }
 
-    public function verifyManual()
-    {
-        $user = Auth::guard('arin')->user();
-
-        $user->update([
-            'email_verified_at' => now(),
-        ]);
-
-        return redirect()->route('client.setup.index')
-            ->with('success', 'Email berhasil diverifikasi.');
-    }
-
-    public function setupIndex()
-    {
-        $user = Auth::guard('arin')->user();
-
-        return view('client.onboarding.setup', compact('user'));
-    }
-
-    public function setupStore(Request $request)
+    public function update(Request $request)
     {
         $user = Auth::guard('arin')->user();
 
@@ -46,14 +26,22 @@ class OnboardingController extends Controller
 
             'user_tagline' => 'nullable|string|max:150',
             'user_description' => 'nullable|string',
+
+            'user_logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'user_favicon' => 'nullable|image|mimes:jpg,jpeg,png,webp,ico|max:1024',
+
             'user_whatsapp' => 'nullable|string|max:30',
             'user_instagram' => 'nullable|string|max:255',
             'user_tiktok' => 'nullable|string|max:255',
 
+            'user_meta_title' => 'nullable|string|max:255',
+            'user_meta_description' => 'nullable|string',
+
             'user_theme_primary' => 'required|string|max:20',
             'user_theme_secondary' => 'required|string|max:20',
+            'user_theme_accent' => 'required|string|max:20',
 
-            'user_logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'user_footer_text' => 'nullable|string|max:255',
         ]);
 
         $slug = Str::slug($request->user_slug);
@@ -65,8 +53,12 @@ class OnboardingController extends Controller
             'user_whatsapp',
             'user_instagram',
             'user_tiktok',
+            'user_meta_title',
+            'user_meta_description',
             'user_theme_primary',
             'user_theme_secondary',
+            'user_theme_accent',
+            'user_footer_text',
         ]);
 
         $data['user_slug'] = $slug;
@@ -74,16 +66,26 @@ class OnboardingController extends Controller
 
         if ($request->hasFile('user_logo')) {
             $file = $request->file('user_logo');
-            $name = time() . '_' . $user->user_id . '.' . $file->getClientOriginalExtension();
+            $name = time() . '_' . $user->user_id . '_logo.' . $file->getClientOriginalExtension();
+
             $file->move(public_path('uploads/client-logo'), $name);
+
             $data['user_logo'] = 'uploads/client-logo/' . $name;
+        }
+
+        if ($request->hasFile('user_favicon')) {
+            $file = $request->file('user_favicon');
+            $name = time() . '_' . $user->user_id . '_favicon.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('uploads/client-favicon'), $name);
+
+            $data['user_favicon'] = 'uploads/client-favicon/' . $name;
         }
 
         $data['user_is_setup_done'] = true;
 
         $user->update($data);
 
-        return redirect()->route('client.dashboard')
-            ->with('success', 'Website berhasil disiapkan.');
+        return back()->with('success', 'Setting website berhasil disimpan.');
     }
 }

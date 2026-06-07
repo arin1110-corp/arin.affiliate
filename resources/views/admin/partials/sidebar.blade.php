@@ -4,6 +4,7 @@
         <h1 class="text-2xl font-bold">
             ARIN
         </h1>
+
         <p class="text-xs text-slate-400">
             Affiliate SaaS
         </p>
@@ -16,25 +17,31 @@
             Dashboard
         </a>
 
-        <a href="#" class="block px-4 py-3 rounded-2xl hover:bg-slate-800">
+        <a href="#"
+           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.client.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
             Client
         </a>
 
-        <a href="#" class="block px-4 py-3 rounded-2xl hover:bg-slate-800">
+        <a href="#"
+           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.package.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
             Package
         </a>
 
-        <a href="#" class="block px-4 py-3 rounded-2xl hover:bg-slate-800">
-            Payment
+        <a href="{{ route('admin.payment.index') }}"
+           class="block px-4 py-3 rounded-2xl
+           {{ request()->routeIs('admin.payment.index') || request()->routeIs('admin.payment.show') || request()->routeIs('admin.payment.approve') || request()->routeIs('admin.payment.reject') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
+            Pembayaran
         </a>
 
-        <a href="#" class="block px-4 py-3 rounded-2xl hover:bg-slate-800">
-            Setting
-        </a>
         <a href="{{ route('admin.landing.setting') }}"
-           class="flex ap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.landing.*') ? 'text-white' : 'hover:bg-slate-800' }}"
-           @if(request()->routeIs('admin.landing.setting')) style="background: {{ $setting->theme_primary ?? '#ec4899' }};" @endif>
+           class="block px-4 py-3 rounded-2xl
+           {{ request()->routeIs('admin.landing.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
             Landing Page
+        </a>
+
+        <a href="#"
+           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.setting.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
+            Setting
         </a>
 
     </nav>

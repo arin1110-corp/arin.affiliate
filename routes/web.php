@@ -10,6 +10,9 @@ use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Front\ProductClickController;
 use App\Http\Controllers\Client\SliderController;
 use App\Http\Controllers\Client\WebsiteSettingController;
+use App\Http\Controllers\Client\PaymentController as ClientPaymentController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\MidtransNotificationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('front.home');
 
@@ -45,6 +48,14 @@ Route::middleware(['arinauth', 'superadmin'])
     Route::get('/landing-setting', [LandingSettingController::class, 'index'])->name('admin.landing.setting');
 
     Route::put('/landing-setting', [LandingSettingController::class, 'update'])->name('admin.landing.setting.update');
+    Route::get('/payment', [AdminPaymentController::class, 'index'])
+        ->name('admin.payment.index');
+
+    Route::get('/payment', [AdminPaymentController::class, 'index'])
+        ->name('admin.payment.index');
+
+    Route::get('/payment/{id}', [AdminPaymentController::class, 'show'])
+        ->name('admin.payment.show');
     });
 
 /*
@@ -138,6 +149,20 @@ Route::middleware(['arinauth', 'client'])
         Route::get('/setting', [WebsiteSettingController::class, 'index'])->name('client.setting.index');
 
         Route::put('/setting', [WebsiteSettingController::class, 'update'])->name('client.setting.update');
+
+        /*
+            |--------------------------------------------------------------------------
+            | PAYMENT
+            |--------------------------------------------------------------------------
+        */
+        Route::get('/payment', [ClientPaymentController::class, 'index'])
+            ->name('client.payment.index');
+
+        Route::get('/payment/create', [ClientPaymentController::class, 'create'])
+            ->name('client.payment.create');
+
+        Route::post('/payment', [ClientPaymentController::class, 'store'])
+            ->name('client.payment.store');
         });
     });
 

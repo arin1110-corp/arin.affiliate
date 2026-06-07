@@ -78,4 +78,8 @@ class ModelUser extends Authenticatable
     {
         return $this->hasMany(ModelProduct::class, 'user_id', 'user_id');
     }
+    public function payments()
+    {
+        return $this->hasMany(ModelPayment::class, 'user_id', 'user_id');
+    }
 }

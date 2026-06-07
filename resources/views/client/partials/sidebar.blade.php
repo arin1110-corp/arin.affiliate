@@ -8,9 +8,8 @@
 
         <div class="flex items-center gap-3">
 
-            @if($user->user_logo)
-                <img src="{{ asset($user->user_logo) }}"
-                     class="w-12 h-12 rounded-2xl object-cover">
+            @if ($user->user_logo)
+                <img src="{{ asset($user->user_logo) }}" class="w-12 h-12 rounded-2xl object-cover">
             @else
                 <div class="w-12 h-12 rounded-2xl theme-button flex items-center justify-center font-bold">
                     {{ strtoupper(substr($user->user_brand_name ?? 'A', 0, 1)) }}
@@ -34,35 +33,38 @@
     <nav class="p-4 space-y-2 text-sm">
 
         <a href="{{ route('client.dashboard') }}"
-           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.dashboard') ? 'theme-menu-active' : 'theme-menu-hover' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.dashboard') ? 'theme-menu-active' : 'theme-menu-hover' }}">
             Dashboard
         </a>
 
         <a href="{{ route('client.kategori.index') }}"
-           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.kategori.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.kategori.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
             Kategori
         </a>
 
         <a href="{{ route('client.product.index') }}"
-           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.product.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.product.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
             Produk
         </a>
 
         <a href="{{ route('client.slider.index') }}"
-           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.slider.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.slider.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
             Slider
+        </a>
+        <a href="{{ route('client.payment.index') }}"
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.payment.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
+            Pembayaran
         </a>
 
         <a href="{{ route('client.setting.index') }}"
-           class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.setting.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('client.setting.*') ? 'theme-menu-active' : 'theme-menu-hover' }}">
             Setting Website
         </a>
 
         <div class="pt-4 mt-4 border-t theme-border">
 
-            <a href="{{ url('/'.$user->user_slug) }}"
-               target="_blank"
-               class="block px-4 py-3 rounded-2xl bg-gray-100 text-gray-700 hover:bg-gray-200">
+            <a href="{{ url('/' . $user->user_slug) }}" target="_blank"
+                class="block px-4 py-3 rounded-2xl bg-gray-100 text-gray-700 hover:bg-gray-200">
                 Lihat Website
             </a>
 

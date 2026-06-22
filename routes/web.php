@@ -21,8 +21,64 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingController;
 
-
 use App\Http\Controllers\MidtransNotificationController;
+
+/*
+|--------------------------------------------------------------------------
+| PUBLIC CLIENT SUBDOMAIN
+|--------------------------------------------------------------------------
+| Contoh: username.dev.affilio.store
+| Taruh paling atas agar tidak ketangkap route /
+|--------------------------------------------------------------------------
+*/
+
+Route::domain('{subdomain}.' . config('app.domain'))->group(function () {
+
+    Route::get('/', function ($subdomain) {
+
+        $client = \App\Models\ModelUser::where('user_slug', $subdomain)
+            ->where('user_role', 'client')
+            ->where('user_is_active', true)
+            ->firstOrFail();
+
+        $sliders = \App\Models\ModelSlider::where('user_id', $client->user_id)
+            ->where('slider_is_active', true)
+            ->orderBy('slider_sort_order')
+            ->get();
+
+        $kategori = \App\Models\ModelKategori::where('user_id', $client->user_id)
+            ->where('kategori_is_active', true)
+            ->where('kategori_is_visible', true)
+            ->orderBy('kategori_sort_order')
+            ->get();
+
+        $featuredProducts = \App\Models\ModelProduct::with('kategori')
+            ->where('user_id', $client->user_id)
+            ->where('product_status', 'active')
+            ->where('product_featured', true)
+            ->latest('product_id')
+            ->take(8)
+            ->get();
+
+        $latestProducts = \App\Models\ModelProduct::with('kategori')
+            ->where('user_id', $client->user_id)
+            ->where('product_status', 'active')
+            ->latest('product_id')
+            ->take(12)
+            ->get();
+
+        return view('front.client.home', compact(
+            'client',
+            'sliders',
+            'kategori',
+            'featuredProducts',
+            'latestProducts'
+        ));
+    })->name('client.public.subdomain');
+
+    Route::get('/go/{productSlug}', [ProductClickController::class, 'clickSubdomain'])
+        ->name('front.product.click.subdomain');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -57,8 +113,6 @@ Route::post('/logout', [AuthController::class, 'logout'])
 /*
 |--------------------------------------------------------------------------
 | MIDTRANS NOTIFICATION
-|--------------------------------------------------------------------------
-| Harus di luar middleware auth.
 |--------------------------------------------------------------------------
 */
 
@@ -322,74 +376,20 @@ Route::middleware(['arinauth', 'client'])
 
 /*
 |--------------------------------------------------------------------------
-| PUBLIC PRODUCT CLICK
+| PUBLIC PRODUCT CLICK FALLBACK PATH
 |--------------------------------------------------------------------------
-| Taruh sebelum /{slug}
+| Contoh: dev.affilio.store/username/go/produk
 |--------------------------------------------------------------------------
 */
 
 Route::get('/{clientSlug}/go/{productSlug}', [ProductClickController::class, 'click'])
     ->name('front.product.click');
 
-Route::domain('{subdomain}.' . config('app.domain'))->group(function () {
-    Route::get('/go/{productSlug}', [ProductClickController::class, 'clickSubdomain'])
-        ->name('front.product.click.subdomain');
-});
-
-
 /*
 |--------------------------------------------------------------------------
-| CLIENT PANEL SUBDOMAIN
+| PUBLIC CLIENT SITE FALLBACK PATH
 |--------------------------------------------------------------------------
-*/
-Route::domain('{subdomain}.' . config('app.domain'))->group(function () {
-    Route::get('/', function ($subdomain) {
-
-        $client = \App\Models\ModelUser::where('user_slug', $subdomain)
-            ->where('user_role', 'client')
-            ->where('user_is_active', true)
-            ->firstOrFail();
-
-        $sliders = \App\Models\ModelSlider::where('user_id', $client->user_id)
-            ->where('slider_is_active', true)
-            ->orderBy('slider_sort_order')
-            ->get();
-
-        $kategori = \App\Models\ModelKategori::where('user_id', $client->user_id)
-            ->where('kategori_is_active', true)
-            ->where('kategori_is_visible', true)
-            ->orderBy('kategori_sort_order')
-            ->get();
-
-        $featuredProducts = \App\Models\ModelProduct::with('kategori')
-            ->where('user_id', $client->user_id)
-            ->where('product_status', 'active')
-            ->where('product_featured', true)
-            ->latest('product_id')
-            ->take(8)
-            ->get();
-
-        $latestProducts = \App\Models\ModelProduct::with('kategori')
-            ->where('user_id', $client->user_id)
-            ->where('product_status', 'active')
-            ->latest('product_id')
-            ->take(12)
-            ->get();
-
-        return view('front.client.home', compact(
-            'client',
-            'sliders',
-            'kategori',
-            'featuredProducts',
-            'latestProducts'
-        ));
-    })->name('client.public.subdomain');
-});
-
-/*
-|--------------------------------------------------------------------------
-| PUBLIC CLIENT SITE
-|--------------------------------------------------------------------------
+| Contoh: dev.affilio.store/username
 | Taruh paling bawah supaya tidak menangkap route lain.
 |--------------------------------------------------------------------------
 */

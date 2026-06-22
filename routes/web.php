@@ -13,6 +13,7 @@ use App\Http\Controllers\Client\WebsiteSettingController;
 use App\Http\Controllers\Client\PaymentController as ClientPaymentController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\MidtransNotificationController;
+use App\Http\Controllers\Admin\ClientController;
 
 Route::get('/', [HomeController::class, 'index'])->name('front.home');
 
@@ -56,6 +57,27 @@ Route::middleware(['arinauth', 'superadmin'])
 
     Route::get('/payment/{id}', [AdminPaymentController::class, 'show'])
         ->name('admin.payment.show');
+
+    Route::get('/client', [ClientController::class, 'index'])
+        ->name('admin.client.index');
+
+    Route::get('/client/{id}', [ClientController::class, 'show'])
+        ->name('admin.client.show');
+
+    Route::get('/client/{id}/edit', [ClientController::class, 'edit'])
+        ->name('admin.client.edit');
+
+    Route::put('/client/{id}', [ClientController::class, 'update'])
+        ->name('admin.client.update');
+
+    Route::patch('/client/{id}/toggle', [ClientController::class, 'toggle'])
+        ->name('admin.client.toggle');
+
+    Route::patch('/client/{id}/extend', [ClientController::class, 'extend'])
+        ->name('admin.client.extend');
+
+    Route::delete('/client/{id}', [ClientController::class, 'destroy'])
+        ->name('admin.client.destroy');
     });
 
 /*

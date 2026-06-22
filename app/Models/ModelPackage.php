@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ModelPackage extends Model
 {
-    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'arin_packages';
     protected $primaryKey = 'package_id';
@@ -18,11 +18,16 @@ class ModelPackage extends Model
         'package_harga_promo',
         'package_harga_normal',
         'package_masa_aktif',
+
         'package_max_product',
+        'package_max_slider',
         'package_max_category',
+
         'package_custom_domain',
+        'package_remove_branding',
         'package_google_analytics',
         'package_meta_pixel',
+
         'package_deskripsi',
         'package_fitur',
         'package_is_active',
@@ -30,7 +35,11 @@ class ModelPackage extends Model
     ];
 
     protected $casts = [
+        'package_harga_promo' => 'decimal:0',
+        'package_harga_normal' => 'decimal:0',
+
         'package_custom_domain' => 'boolean',
+        'package_remove_branding' => 'boolean',
         'package_google_analytics' => 'boolean',
         'package_meta_pixel' => 'boolean',
         'package_is_active' => 'boolean',

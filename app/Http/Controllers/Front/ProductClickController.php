@@ -22,4 +22,20 @@ class ProductClickController extends Controller
 
         return redirect()->away($product->product_affiliate_link);
     }
+    public function clickSubdomain($subdomain, $productSlug)
+    {
+        $client = \App\Models\ModelUser::where('user_slug', $subdomain)
+            ->where('user_role', 'client')
+            ->where('user_is_active', true)
+            ->firstOrFail();
+
+        $product = \App\Models\ModelProduct::where('user_id', $client->user_id)
+            ->where('product_slug', $productSlug)
+            ->where('product_status', 'active')
+            ->firstOrFail();
+
+        $product->increment('product_total_click');
+
+        return redirect()->away($product->product_affiliate_link);
+    }
 }

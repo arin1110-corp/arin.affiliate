@@ -1,9 +1,16 @@
+@php
+    $appSetting = \App\Models\ModelSetting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard') - ARIN</title>
+    <title>@yield('title') - {{ $appSetting->app_name ?? 'ARIN' }}</title>
+    @if ($appSetting && $appSetting->app_favicon)
+        <link rel="icon" href="{{ asset($appSetting->app_favicon) }}">
+    @endif
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -27,4 +34,5 @@
     </div>
 
 </body>
+
 </html>

@@ -1,13 +1,26 @@
 <aside class="fixed left-0 top-0 w-72 h-screen bg-slate-900 text-white hidden md:block">
 
     <div class="p-6 border-b border-slate-800">
-        <h1 class="text-2xl font-bold">
-            ARIN
-        </h1>
+        <div class="flex items-center gap-3">
+            @if ($appSetting && $appSetting->app_logo)
+                <img src="{{ asset($appSetting->app_logo) }}"
+                     class="w-11 h-11 rounded-xl object-cover bg-white">
+            @else
+                <div class="w-11 h-11 rounded-xl bg-pink-500 flex items-center justify-center font-bold">
+                    {{ strtoupper(substr($appSetting->app_name ?? 'A', 0, 1)) }}
+                </div>
+            @endif
 
-        <p class="text-xs text-slate-400">
-            Affiliate SaaS
-        </p>
+            <div>
+                <h1 class="text-2xl font-bold leading-tight">
+                    {{ $appSetting->app_name ?? 'ARIN' }}
+                </h1>
+
+                <p class="text-xs text-slate-400">
+                    Affiliate SaaS
+                </p>
+            </div>
+        </div>
     </div>
 
     <nav class="p-4 space-y-2 text-sm">
@@ -22,27 +35,33 @@
             Client
         </a>
 
-        <a href="#"
+        <a href="{{ route('admin.package.index') }}"
             class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.package.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
             Package
         </a>
 
         <a href="{{ route('admin.payment.index') }}"
-            class="block px-4 py-3 rounded-2xl
-           {{ request()->routeIs('admin.payment.index') || request()->routeIs('admin.payment.show') || request()->routeIs('admin.payment.approve') || request()->routeIs('admin.payment.reject') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.payment.index') || request()->routeIs('admin.payment.show') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
             Pembayaran
         </a>
 
         <a href="{{ route('admin.landing.setting') }}"
-            class="block px-4 py-3 rounded-2xl
-           {{ request()->routeIs('admin.landing.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
+            class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.landing.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
             Landing Page
         </a>
 
-        <a href="#"
+        <a href="{{ route('admin.setting.index') }}"
             class="block px-4 py-3 rounded-2xl {{ request()->routeIs('admin.setting.*') ? 'bg-slate-800' : 'hover:bg-slate-800' }}">
-            Setting
+            Setting Website
         </a>
+
+        <form action="{{ route('logout') }}" method="POST" class="pt-4 border-t border-slate-800 mt-4">
+            @csrf
+
+            <button class="w-full text-left px-4 py-3 rounded-2xl hover:bg-red-500/20 text-red-300">
+                Logout
+            </button>
+        </form>
 
     </nav>
 

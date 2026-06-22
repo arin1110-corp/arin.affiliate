@@ -1,9 +1,17 @@
+@php
+    $appSetting = \App\Models\ModelSetting::first();
+@endphp
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $landing->site_name }} - {{ $landing->site_tagline }}</title>
+    <title>{{ $landing->site_name ?? $appSetting->app_name ?? 'ARIN' }} - {{ $landing->site_tagline ?? 'Affiliate SaaS' }}</title>
+
+    @if($appSetting && $appSetting->app_favicon)
+        <link rel="icon" href="{{ asset($appSetting->app_favicon) }}">
+    @endif
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -22,13 +30,25 @@
 <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
-        <a href="{{ route('front.home') }}">
-            <h1 class="text-2xl font-bold" style="color: var(--primary);">
-                {{ $landing->site_name ?? 'ARIN' }}
-            </h1>
-            <p class="text-xs text-slate-500">
-                {{ $landing->site_tagline }}
-            </p>
+        <a href="{{ route('front.home') }}" class="flex items-center gap-3">
+            @if($appSetting && $appSetting->app_logo)
+                <img src="{{ asset($appSetting->app_logo) }}"
+                     class="w-11 h-11 rounded-xl object-cover">
+            @else
+                <div class="w-11 h-11 rounded-xl text-white flex items-center justify-center font-bold"
+                     style="background: var(--primary);">
+                    {{ strtoupper(substr($landing->site_name ?? $appSetting->app_name ?? 'A', 0, 1)) }}
+                </div>
+            @endif
+
+            <div>
+                <h1 class="text-2xl font-bold" style="color: var(--primary);">
+                    {{ $landing->site_name ?? $appSetting->app_name ?? 'ARIN' }}
+                </h1>
+                <p class="text-xs text-slate-500">
+                    {{ $landing->site_tagline ?? 'Affiliate SaaS' }}
+                </p>
+            </div>
         </a>
 
         <div class="flex gap-3">
@@ -93,8 +113,12 @@
                 <div class="h-[420px] rounded-[24px] flex items-center justify-center"
                      style="background: linear-gradient(135deg, var(--primary), var(--accent));">
                     <div class="text-center text-white">
-                        <h3 class="text-4xl font-bold">ARIN</h3>
-                        <p class="mt-2">Your Affiliate Store</p>
+                        <h3 class="text-4xl font-bold">
+                            {{ $appSetting->app_name ?? 'ARIN' }}
+                        </h3>
+                        <p class="mt-2">
+                            Your Affiliate Store
+                        </p>
                     </div>
                 </div>
             @endif
@@ -125,18 +149,18 @@
 <section id="pricing" class="max-w-7xl mx-auto px-4 py-16">
     <div class="text-center mb-10">
         <h2 class="text-3xl md:text-4xl font-bold">
-            Pilih Paket ARIN
+            Pilih Paket {{ $appSetting->app_name ?? 'ARIN' }}
         </h2>
 
         <p class="text-slate-500 mt-3">
-            Mulai dari promo Rp14.900/bulan untuk 3 bulan pertama.
+            Pilih paket sesuai kebutuhan website affiliate kamu.
         </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
 
         @foreach($packages as $package)
-            <div class="bg-white/90 border rounded-[28px] p-8 shadow-xl">
+            <div class="bg-white/90 border rounded-[28px] p-8 shadow-xl flex flex-col">
 
                 <h3 class="text-2xl font-bold">
                     {{ $package->package_nama }}
@@ -157,13 +181,17 @@
                         </p>
 
                         <p class="text-xs text-slate-400 mt-1">
-                            Promo 3 bulan pertama untuk 1.000 pengguna pertama
+                            Promo terbatas untuk pengguna awal.
                         </p>
                     @else
                         <p class="text-4xl font-bold" style="color: var(--primary);">
                             Rp {{ number_format($package->package_harga_normal, 0, ',', '.') }}
                         </p>
                     @endif
+
+                    <p class="text-xs text-slate-400 mt-2">
+                        Masa aktif {{ $package->package_masa_aktif }} hari
+                    </p>
                 </div>
 
                 <ul class="mt-6 space-y-3 text-sm text-slate-600">
@@ -173,6 +201,12 @@
                         @endif
                     @endforeach
                 </ul>
+
+                <div class="mt-6 text-xs text-slate-500 space-y-1">
+                    <p>Produk: {{ $package->package_max_product }}</p>
+                    <p>Slider: {{ $package->package_max_slider }}</p>
+                    <p>Kategori: {{ $package->package_max_category }}</p>
+                </div>
 
                 <a href="{{ route('register', ['package' => $package->package_slug]) }}"
                    class="block text-center mt-8 py-3 rounded-2xl text-white font-semibold"
@@ -213,7 +247,7 @@
 
 <footer class="border-t bg-white/70">
     <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm text-slate-400">
-        © {{ date('Y') }} {{ $landing->site_name }}. Crafted by ARIN Digital Creative & IT Solutions.
+        {{ $appSetting->footer_text ?? '© ' . date('Y') . ' ' . ($landing->site_name ?? $appSetting->app_name ?? 'ARIN') . '. Crafted by ARIN Digital Creative & IT Solutions.' }}
     </div>
 </footer>
 

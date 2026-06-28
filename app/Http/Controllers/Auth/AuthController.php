@@ -10,16 +10,32 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmailMail;
+use App\Models\ModelPackage;
+use Illuminate\Validation\Rule;
+use App\Models\ModelLandingSetting;
+use App\Models\ModelSetting;
 
 class AuthController extends Controller
 {
     public function login()
     {
         if (Auth::guard('arin')->check()) {
-            return $this->redirectByRole(Auth::guard('arin')->user());
+            $user = Auth::guard('arin')->user();
+
+            if ($user->user_role === 'client' && !$user->user_email_verified_at) {
+                Auth::guard('arin')->logout();
+
+                session()->invalidate();
+                session()->regenerateToken();
+            } else {
+                return $this->redirectByRole($user);
+            }
         }
 
-        return view('auth.login');
+        $landing = ModelLandingSetting::first();
+        $appSetting = ModelSetting::first();
+
+        return view('auth.login', compact('landing', 'appSetting'));
     }
 
     public function register(Request $request)
@@ -28,13 +44,18 @@ class AuthController extends Controller
             return $this->redirectByRole(Auth::guard('arin')->user());
         }
 
-        $selectedPackage = $request->get('package', 'starter');
+        $packages = ModelPackage::where('package_is_active', true)->orderBy('package_id')->get();
 
-        if (!in_array($selectedPackage, ['starter', 'pro'])) {
-            $selectedPackage = 'starter';
+        $selectedPackage = $request->get('package');
+
+        if ($selectedPackage && !$packages->pluck('package_slug')->contains($selectedPackage)) {
+            $selectedPackage = null;
         }
 
-        return view('auth.register', compact('selectedPackage'));
+        $landing = ModelLandingSetting::first();
+        $appSetting = ModelSetting::first();
+
+        return view('auth.register', compact('packages', 'selectedPackage', 'landing', 'appSetting'));
     }
 
     public function authenticate(Request $request)
@@ -47,19 +68,37 @@ class AuthController extends Controller
         $user = ModelUser::where('user_email', $request->email)->where('user_is_active', true)->first();
 
         if (!$user) {
-            return back()->withInput()->with('error', 'User tidak ditemukan atau tidak aktif.');
+            return redirect()
+                ->route('login')
+                ->withInput()
+                ->with('error', [
+                    'title' => 'Email Tidak Terdaftar',
+                    'message' => 'Email yang Anda masukkan belum terdaftar pada sistem.',
+                ]);
         }
 
         if (!Hash::check($request->password, $user->user_password)) {
-            return back()->withInput()->with('error', 'Password salah.');
+            return redirect()
+                ->route('login')
+                ->withInput()
+                ->with('error', [
+                    'title' => 'Password Salah',
+                    'message' => 'Password yang Anda masukkan tidak sesuai.',
+                ]);
         }
 
-        if (!$user->user_email_verified_at) {
+        if ($user->user_role !== 'superadmin' && !$user->user_email_verified_at) {
             session([
                 'verify_email' => $user->user_email,
             ]);
 
-            return redirect()->route('client.verify.notice')->with('error', 'Silakan verifikasi email terlebih dahulu.');
+            return redirect()
+                ->route('login')
+                ->withInput()
+                ->with('error', [
+                    'title' => 'Email Belum Diverifikasi',
+                    'message' => 'Silakan cek email Anda dan lakukan verifikasi terlebih dahulu.',
+                ]);
         }
 
         Auth::guard('arin')->login($user);
@@ -76,7 +115,8 @@ class AuthController extends Controller
             'user_email' => 'required|email|unique:arin_users,user_email',
             'user_password' => 'required|min:6',
             'user_brand_name' => 'required|string|max:150',
-            'package' => 'required|in:starter,pro',
+
+            'package' => ['required', Rule::exists('arin_packages', 'package_slug')],
         ]);
         $token = Str::random(64);
 
@@ -160,7 +200,7 @@ class AuthController extends Controller
             'verify_email' => $user->user_email,
         ]);
 
-        return redirect()->route('client.verify.notice');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan cek email dan lakukan verifikasi terlebih dahulu.');
     }
 
     public function logout(Request $request)

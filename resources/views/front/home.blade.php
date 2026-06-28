@@ -57,7 +57,7 @@
                 Login
             </a>
 
-            <a href="{{ route('register', ['package' => 'starter']) }}"
+            <a href="{{ route('register')}}"
                class="px-4 py-2 rounded-2xl text-sm text-white"
                style="background: var(--primary);">
                 Daftar
@@ -247,7 +247,7 @@
 
 <footer class="border-t bg-white/70">
     <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm text-slate-400">
-        {{ $appSetting->footer_text ?? '© ' . date('Y') . ' ' . ($landing->site_name ?? $appSetting->app_name ?? 'ARIN') . '. Crafted by ARIN Digital Creative & IT Solutions.' }}
+        {{ $appSetting->footer_text ?? '© ' . date('Y') . ' ' . ($landing->site_name ?? $appSetting->app_name ?? 'Affilio Store') . '. Crafted by ARIN Digital Creative & IT Solutions.' }}
     </div>
 </footer>
 

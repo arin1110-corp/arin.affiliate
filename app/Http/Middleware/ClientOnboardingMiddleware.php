@@ -20,11 +20,11 @@ class ClientOnboardingMiddleware
             return redirect()->route('admin.dashboard');
         }
 
-        if (!$user->email_verified_at && !$request->routeIs('client.verify.*')) {
+        if (!$user->user_email_verified_at && !$request->routeIs('client.verify.*')) {
             return redirect()->route('client.verify.notice');
         }
 
-        if ($user->email_verified_at && !$user->user_is_setup_done && !$request->routeIs('client.setup.*')) {
+        if ($user->user_email_verified_at && !$user->user_is_setup_done && !$request->routeIs('client.setup.*')) {
             return redirect()->route('client.setup.index');
         }
 

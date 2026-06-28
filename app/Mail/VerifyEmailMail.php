@@ -22,7 +22,7 @@ class VerifyEmailMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('Verifikasi Email ARIN')
+            ->subject('Verifikasi Email AFFILIO')
             ->view('emails.verify-email');
     }
 }

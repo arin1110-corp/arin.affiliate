@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmailMail;
 
 class AuthController extends Controller
 {
@@ -42,20 +44,22 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = ModelUser::where('user_email', $request->email)
-            ->where('user_is_active', true)
-            ->first();
+        $user = ModelUser::where('user_email', $request->email)->where('user_is_active', true)->first();
 
         if (!$user) {
-            return back()
-                ->withInput()
-                ->with('error', 'User tidak ditemukan atau tidak aktif.');
+            return back()->withInput()->with('error', 'User tidak ditemukan atau tidak aktif.');
         }
 
         if (!Hash::check($request->password, $user->user_password)) {
-            return back()
-                ->withInput()
-                ->with('error', 'Password salah.');
+            return back()->withInput()->with('error', 'Password salah.');
+        }
+
+        if (!$user->user_email_verified_at) {
+            session([
+                'verify_email' => $user->user_email,
+            ]);
+
+            return redirect()->route('client.verify.notice')->with('error', 'Silakan verifikasi email terlebih dahulu.');
         }
 
         Auth::guard('arin')->login($user);
@@ -74,6 +78,7 @@ class AuthController extends Controller
             'user_brand_name' => 'required|string|max:150',
             'package' => 'required|in:starter,pro',
         ]);
+        $token = Str::random(64);
 
         $baseSlug = Str::slug($request->user_brand_name);
 
@@ -102,9 +107,7 @@ class AuthController extends Controller
         | selama 3 bulan pertama.
         */
 
-        $totalPromoUser = ModelUser::where('user_role', 'client')
-            ->where('user_is_promo', true)
-            ->count();
+        $totalPromoUser = ModelUser::where('user_role', 'client')->where('user_is_promo', true)->count();
 
         $isPromo = $request->package === 'starter' && $totalPromoUser < 1000;
 
@@ -128,6 +131,9 @@ class AuthController extends Controller
             'user_package_started_at' => now(),
             'user_promo_until' => $isPromo ? now()->addMonths(3) : null,
 
+            'user_email_verify_token' => $token,
+            'user_email_verified_at' => null,
+
             /*
             | Trial 3 hari sebelum wajib bayar.
             | Promo tetap dicatat, tapi trial hanya 3 hari.
@@ -148,9 +154,11 @@ class AuthController extends Controller
             'user_is_active' => true,
         ]);
 
-        Auth::guard('arin')->login($user);
+        Mail::to($user->user_email)->send(new VerifyEmailMail($user));
 
-        $request->session()->regenerate();
+        session([
+            'verify_email' => $user->user_email,
+        ]);
 
         return redirect()->route('client.verify.notice');
     }
@@ -171,7 +179,7 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        if (!$user->email_verified_at) {
+        if (!$user->user_email_verified_at) {
             return redirect()->route('client.verify.notice');
         }
 
@@ -180,5 +188,24 @@ class AuthController extends Controller
         }
 
         return redirect()->route('client.dashboard');
+    }
+    public function verifyEmail($token)
+    {
+        $user = ModelUser::where('user_email_verify_token', $token)->first();
+
+        if (!$user) {
+            abort(404);
+        }
+
+        $user->update([
+            'user_email_verified_at' => now(),
+            'user_email_verify_token' => null,
+        ]);
+
+        Auth::guard('arin')->login($user);
+
+        session()->regenerate();
+
+        return redirect()->route('client.setup.index')->with('success', 'Email berhasil diverifikasi.');
     }
 }

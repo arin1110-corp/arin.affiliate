@@ -33,51 +33,21 @@ use App\Http\Controllers\MidtransNotificationController;
 */
 
 Route::domain('{subdomain}.' . config('app.domain'))->group(function () {
-
     Route::get('/', function ($subdomain) {
+        $client = \App\Models\ModelUser::where('user_slug', $subdomain)->where('user_role', 'client')->where('user_is_active', true)->firstOrFail();
 
-        $client = \App\Models\ModelUser::where('user_slug', $subdomain)
-            ->where('user_role', 'client')
-            ->where('user_is_active', true)
-            ->firstOrFail();
+        $sliders = \App\Models\ModelSlider::where('user_id', $client->user_id)->where('slider_is_active', true)->orderBy('slider_sort_order')->get();
 
-        $sliders = \App\Models\ModelSlider::where('user_id', $client->user_id)
-            ->where('slider_is_active', true)
-            ->orderBy('slider_sort_order')
-            ->get();
+        $kategori = \App\Models\ModelKategori::where('user_id', $client->user_id)->where('kategori_is_active', true)->where('kategori_is_visible', true)->orderBy('kategori_sort_order')->get();
 
-        $kategori = \App\Models\ModelKategori::where('user_id', $client->user_id)
-            ->where('kategori_is_active', true)
-            ->where('kategori_is_visible', true)
-            ->orderBy('kategori_sort_order')
-            ->get();
+        $featuredProducts = \App\Models\ModelProduct::with('kategori')->where('user_id', $client->user_id)->where('product_status', 'active')->where('product_featured', true)->latest('product_id')->take(8)->get();
 
-        $featuredProducts = \App\Models\ModelProduct::with('kategori')
-            ->where('user_id', $client->user_id)
-            ->where('product_status', 'active')
-            ->where('product_featured', true)
-            ->latest('product_id')
-            ->take(8)
-            ->get();
+        $latestProducts = \App\Models\ModelProduct::with('kategori')->where('user_id', $client->user_id)->where('product_status', 'active')->latest('product_id')->take(12)->get();
 
-        $latestProducts = \App\Models\ModelProduct::with('kategori')
-            ->where('user_id', $client->user_id)
-            ->where('product_status', 'active')
-            ->latest('product_id')
-            ->take(12)
-            ->get();
-
-        return view('front.client.home', compact(
-            'client',
-            'sliders',
-            'kategori',
-            'featuredProducts',
-            'latestProducts'
-        ));
+        return view('front.client.home', compact('client', 'sliders', 'kategori', 'featuredProducts', 'latestProducts'));
     })->name('client.public.subdomain');
 
-    Route::get('/go/{productSlug}', [ProductClickController::class, 'clickSubdomain'])
-        ->name('front.product.click.subdomain');
+    Route::get('/go/{productSlug}', [ProductClickController::class, 'clickSubdomain'])->name('front.product.click.subdomain');
 });
 
 /*
@@ -86,8 +56,8 @@ Route::domain('{subdomain}.' . config('app.domain'))->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [HomeController::class, 'index'])
-    ->name('front.home');
+Route::get('/', [HomeController::class, 'index'])->name('front.home');
+Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('client.verify.email');
 
 /*
 |--------------------------------------------------------------------------
@@ -95,20 +65,15 @@ Route::get('/', [HomeController::class, 'index'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/login', [AuthController::class, 'login'])
-    ->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 
-Route::post('/login', [AuthController::class, 'authenticate'])
-    ->name('authenticate');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 
-Route::get('/register', [AuthController::class, 'register'])
-    ->name('register');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
 
-Route::post('/register', [AuthController::class, 'storeRegister'])
-    ->name('register.store');
+Route::post('/register', [AuthController::class, 'storeRegister'])->name('register.store');
 
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -116,8 +81,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
-Route::post('/midtrans/notification', [MidtransNotificationController::class, 'handle'])
-    ->name('midtrans.notification');
+Route::post('/midtrans/notification', [MidtransNotificationController::class, 'handle'])->name('midtrans.notification');
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +92,6 @@ Route::post('/midtrans/notification', [MidtransNotificationController::class, 'h
 Route::middleware(['arinauth', 'superadmin'])
     ->prefix('admin')
     ->group(function () {
-
     Route::get('/dashboard', function () {
             return view('admin.dashboard.index');
         })->name('admin.dashboard');
@@ -139,26 +102,19 @@ Route::middleware(['arinauth', 'superadmin'])
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/client', [ClientController::class, 'index'])
-        ->name('admin.client.index');
+    Route::get('/client', [ClientController::class, 'index'])->name('admin.client.index');
 
-    Route::get('/client/{id}', [ClientController::class, 'show'])
-        ->name('admin.client.show');
+    Route::get('/client/{id}', [ClientController::class, 'show'])->name('admin.client.show');
 
-    Route::get('/client/{id}/edit', [ClientController::class, 'edit'])
-        ->name('admin.client.edit');
+    Route::get('/client/{id}/edit', [ClientController::class, 'edit'])->name('admin.client.edit');
 
-    Route::put('/client/{id}', [ClientController::class, 'update'])
-        ->name('admin.client.update');
+    Route::put('/client/{id}', [ClientController::class, 'update'])->name('admin.client.update');
 
-    Route::patch('/client/{id}/toggle', [ClientController::class, 'toggle'])
-        ->name('admin.client.toggle');
+    Route::patch('/client/{id}/toggle', [ClientController::class, 'toggle'])->name('admin.client.toggle');
 
-    Route::patch('/client/{id}/extend', [ClientController::class, 'extend'])
-        ->name('admin.client.extend');
+    Route::patch('/client/{id}/extend', [ClientController::class, 'extend'])->name('admin.client.extend');
 
-    Route::delete('/client/{id}', [ClientController::class, 'destroy'])
-        ->name('admin.client.destroy');
+    Route::delete('/client/{id}', [ClientController::class, 'destroy'])->name('admin.client.destroy');
 
     /*
         |--------------------------------------------------------------------------
@@ -166,26 +122,19 @@ Route::middleware(['arinauth', 'superadmin'])
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/package', [PackageController::class, 'index'])
-        ->name('admin.package.index');
+    Route::get('/package', [PackageController::class, 'index'])->name('admin.package.index');
 
-    Route::get('/package/create', [PackageController::class, 'create'])
-        ->name('admin.package.create');
+    Route::get('/package/create', [PackageController::class, 'create'])->name('admin.package.create');
 
-    Route::post('/package', [PackageController::class, 'store'])
-        ->name('admin.package.store');
+    Route::post('/package', [PackageController::class, 'store'])->name('admin.package.store');
 
-    Route::get('/package/{id}/edit', [PackageController::class, 'edit'])
-        ->name('admin.package.edit');
+    Route::get('/package/{id}/edit', [PackageController::class, 'edit'])->name('admin.package.edit');
 
-    Route::put('/package/{id}', [PackageController::class, 'update'])
-        ->name('admin.package.update');
+    Route::put('/package/{id}', [PackageController::class, 'update'])->name('admin.package.update');
 
-    Route::patch('/package/{id}/toggle', [PackageController::class, 'toggle'])
-        ->name('admin.package.toggle');
+    Route::patch('/package/{id}/toggle', [PackageController::class, 'toggle'])->name('admin.package.toggle');
 
-    Route::delete('/package/{id}', [PackageController::class, 'destroy'])
-        ->name('admin.package.destroy');
+    Route::delete('/package/{id}', [PackageController::class, 'destroy'])->name('admin.package.destroy');
 
     /*
         |--------------------------------------------------------------------------
@@ -193,11 +142,9 @@ Route::middleware(['arinauth', 'superadmin'])
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/payment', [AdminPaymentController::class, 'index'])
-        ->name('admin.payment.index');
+    Route::get('/payment', [AdminPaymentController::class, 'index'])->name('admin.payment.index');
 
-    Route::get('/payment/{id}', [AdminPaymentController::class, 'show'])
-        ->name('admin.payment.show');
+    Route::get('/payment/{id}', [AdminPaymentController::class, 'show'])->name('admin.payment.show');
 
     /*
         |--------------------------------------------------------------------------
@@ -205,11 +152,9 @@ Route::middleware(['arinauth', 'superadmin'])
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/payment-setting', [PaymentSettingController::class, 'index'])
-        ->name('admin.payment.setting');
+    Route::get('/payment-setting', [PaymentSettingController::class, 'index'])->name('admin.payment.setting');
 
-    Route::put('/payment-setting', [PaymentSettingController::class, 'update'])
-        ->name('admin.payment.setting.update');
+    Route::put('/payment-setting', [PaymentSettingController::class, 'update'])->name('admin.payment.setting.update');
 
     /*
         |--------------------------------------------------------------------------
@@ -217,11 +162,9 @@ Route::middleware(['arinauth', 'superadmin'])
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/landing-setting', [LandingSettingController::class, 'index'])
-        ->name('admin.landing.setting');
+    Route::get('/landing-setting', [LandingSettingController::class, 'index'])->name('admin.landing.setting');
 
-    Route::put('/landing-setting', [LandingSettingController::class, 'update'])
-        ->name('admin.landing.setting.update');
+    Route::put('/landing-setting', [LandingSettingController::class, 'update'])->name('admin.landing.setting.update');
 
     /*
         |--------------------------------------------------------------------------
@@ -229,11 +172,9 @@ Route::middleware(['arinauth', 'superadmin'])
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/setting', [SettingController::class, 'index'])
-        ->name('admin.setting.index');
+    Route::get('/setting', [SettingController::class, 'index'])->name('admin.setting.index');
 
-    Route::put('/setting', [SettingController::class, 'update'])
-        ->name('admin.setting.update');
+    Route::put('/setting', [SettingController::class, 'update'])->name('admin.setting.update');
     });
 
 /*
@@ -245,21 +186,15 @@ Route::middleware(['arinauth', 'superadmin'])
 Route::middleware(['arinauth', 'client'])
     ->prefix('client')
     ->group(function () {
+    Route::get('/verify-email', [OnboardingController::class, 'verifyNotice'])->name('client.verify.notice');
 
-    Route::get('/verify-email', [OnboardingController::class, 'verifyNotice'])
-        ->name('client.verify.notice');
+    Route::post('/verify-email/manual', [OnboardingController::class, 'verifyManual'])->name('client.verify.manual');
 
-    Route::post('/verify-email/manual', [OnboardingController::class, 'verifyManual'])
-        ->name('client.verify.manual');
+    Route::get('/setup', [OnboardingController::class, 'setupIndex'])->name('client.setup.index');
 
-    Route::get('/setup', [OnboardingController::class, 'setupIndex'])
-        ->name('client.setup.index');
-
-    Route::post('/setup', [OnboardingController::class, 'setupStore'])
-        ->name('client.setup.store');
+    Route::post('/setup', [OnboardingController::class, 'setupStore'])->name('client.setup.store');
 
     Route::middleware('client.onboarding')->group(function () {
-
         Route::get('/dashboard', function () {
                 return view('client.dashboard.index');
             })->name('client.dashboard');
@@ -270,26 +205,19 @@ Route::middleware(['arinauth', 'client'])
             |--------------------------------------------------------------------------
             */
 
-        Route::get('/kategori', [KategoriController::class, 'index'])
-            ->name('client.kategori.index');
+        Route::get('/kategori', [KategoriController::class, 'index'])->name('client.kategori.index');
 
-        Route::get('/kategori/create', [KategoriController::class, 'create'])
-            ->name('client.kategori.create');
+        Route::get('/kategori/create', [KategoriController::class, 'create'])->name('client.kategori.create');
 
-        Route::post('/kategori', [KategoriController::class, 'store'])
-            ->name('client.kategori.store');
+        Route::post('/kategori', [KategoriController::class, 'store'])->name('client.kategori.store');
 
-        Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])
-            ->name('client.kategori.edit');
+        Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('client.kategori.edit');
 
-        Route::put('/kategori/{id}', [KategoriController::class, 'update'])
-            ->name('client.kategori.update');
+        Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('client.kategori.update');
 
-        Route::patch('/kategori/{id}/toggle', [KategoriController::class, 'toggle'])
-            ->name('client.kategori.toggle');
+        Route::patch('/kategori/{id}/toggle', [KategoriController::class, 'toggle'])->name('client.kategori.toggle');
 
-        Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])
-            ->name('client.kategori.destroy');
+        Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('client.kategori.destroy');
 
         /*
             |--------------------------------------------------------------------------
@@ -297,26 +225,19 @@ Route::middleware(['arinauth', 'client'])
             |--------------------------------------------------------------------------
             */
 
-        Route::get('/product', [ProductController::class, 'index'])
-            ->name('client.product.index');
+        Route::get('/product', [ProductController::class, 'index'])->name('client.product.index');
 
-        Route::get('/product/create', [ProductController::class, 'create'])
-            ->name('client.product.create');
+        Route::get('/product/create', [ProductController::class, 'create'])->name('client.product.create');
 
-        Route::post('/product', [ProductController::class, 'store'])
-            ->name('client.product.store');
+        Route::post('/product', [ProductController::class, 'store'])->name('client.product.store');
 
-        Route::get('/product/{id}/edit', [ProductController::class, 'edit'])
-            ->name('client.product.edit');
+        Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('client.product.edit');
 
-        Route::put('/product/{id}', [ProductController::class, 'update'])
-            ->name('client.product.update');
+        Route::put('/product/{id}', [ProductController::class, 'update'])->name('client.product.update');
 
-        Route::patch('/product/{id}/toggle', [ProductController::class, 'toggle'])
-            ->name('client.product.toggle');
+        Route::patch('/product/{id}/toggle', [ProductController::class, 'toggle'])->name('client.product.toggle');
 
-        Route::delete('/product/{id}', [ProductController::class, 'destroy'])
-            ->name('client.product.destroy');
+        Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('client.product.destroy');
 
         /*
             |--------------------------------------------------------------------------
@@ -324,26 +245,19 @@ Route::middleware(['arinauth', 'client'])
             |--------------------------------------------------------------------------
             */
 
-        Route::get('/slider', [SliderController::class, 'index'])
-            ->name('client.slider.index');
+        Route::get('/slider', [SliderController::class, 'index'])->name('client.slider.index');
 
-        Route::get('/slider/create', [SliderController::class, 'create'])
-            ->name('client.slider.create');
+        Route::get('/slider/create', [SliderController::class, 'create'])->name('client.slider.create');
 
-        Route::post('/slider', [SliderController::class, 'store'])
-            ->name('client.slider.store');
+        Route::post('/slider', [SliderController::class, 'store'])->name('client.slider.store');
 
-        Route::get('/slider/{id}/edit', [SliderController::class, 'edit'])
-            ->name('client.slider.edit');
+        Route::get('/slider/{id}/edit', [SliderController::class, 'edit'])->name('client.slider.edit');
 
-        Route::put('/slider/{id}', [SliderController::class, 'update'])
-            ->name('client.slider.update');
+        Route::put('/slider/{id}', [SliderController::class, 'update'])->name('client.slider.update');
 
-        Route::patch('/slider/{id}/toggle', [SliderController::class, 'toggle'])
-            ->name('client.slider.toggle');
+        Route::patch('/slider/{id}/toggle', [SliderController::class, 'toggle'])->name('client.slider.toggle');
 
-        Route::delete('/slider/{id}', [SliderController::class, 'destroy'])
-            ->name('client.slider.destroy');
+        Route::delete('/slider/{id}', [SliderController::class, 'destroy'])->name('client.slider.destroy');
 
         /*
             |--------------------------------------------------------------------------
@@ -351,11 +265,9 @@ Route::middleware(['arinauth', 'client'])
             |--------------------------------------------------------------------------
             */
 
-        Route::get('/setting', [WebsiteSettingController::class, 'index'])
-            ->name('client.setting.index');
+        Route::get('/setting', [WebsiteSettingController::class, 'index'])->name('client.setting.index');
 
-        Route::put('/setting', [WebsiteSettingController::class, 'update'])
-            ->name('client.setting.update');
+        Route::put('/setting', [WebsiteSettingController::class, 'update'])->name('client.setting.update');
 
         /*
             |--------------------------------------------------------------------------
@@ -363,14 +275,11 @@ Route::middleware(['arinauth', 'client'])
             |--------------------------------------------------------------------------
             */
 
-        Route::get('/payment', [ClientPaymentController::class, 'index'])
-            ->name('client.payment.index');
+        Route::get('/payment', [ClientPaymentController::class, 'index'])->name('client.payment.index');
 
-        Route::get('/payment/create', [ClientPaymentController::class, 'create'])
-            ->name('client.payment.create');
+        Route::get('/payment/create', [ClientPaymentController::class, 'create'])->name('client.payment.create');
 
-        Route::post('/payment', [ClientPaymentController::class, 'store'])
-            ->name('client.payment.store');
+        Route::post('/payment', [ClientPaymentController::class, 'store'])->name('client.payment.store');
         });
     });
 
@@ -382,8 +291,7 @@ Route::middleware(['arinauth', 'client'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/{clientSlug}/go/{productSlug}', [ProductClickController::class, 'click'])
-    ->name('front.product.click');
+Route::get('/{clientSlug}/go/{productSlug}', [ProductClickController::class, 'click'])->name('front.product.click');
 
 /*
 |--------------------------------------------------------------------------
@@ -395,42 +303,15 @@ Route::get('/{clientSlug}/go/{productSlug}', [ProductClickController::class, 'cl
 */
 
 Route::get('/{slug}', function ($slug) {
-    $client = \App\Models\ModelUser::where('user_slug', $slug)
-        ->where('user_role', 'client')
-        ->where('user_is_active', true)
-        ->firstOrFail();
+    $client = \App\Models\ModelUser::where('user_slug', $slug)->where('user_role', 'client')->where('user_is_active', true)->firstOrFail();
 
-    $sliders = \App\Models\ModelSlider::where('user_id', $client->user_id)
-        ->where('slider_is_active', true)
-        ->orderBy('slider_sort_order')
-        ->get();
+    $sliders = \App\Models\ModelSlider::where('user_id', $client->user_id)->where('slider_is_active', true)->orderBy('slider_sort_order')->get();
 
-    $kategori = \App\Models\ModelKategori::where('user_id', $client->user_id)
-        ->where('kategori_is_active', true)
-        ->where('kategori_is_visible', true)
-        ->orderBy('kategori_sort_order')
-        ->get();
+    $kategori = \App\Models\ModelKategori::where('user_id', $client->user_id)->where('kategori_is_active', true)->where('kategori_is_visible', true)->orderBy('kategori_sort_order')->get();
 
-    $featuredProducts = \App\Models\ModelProduct::with('kategori')
-        ->where('user_id', $client->user_id)
-        ->where('product_status', 'active')
-        ->where('product_featured', true)
-        ->latest('product_id')
-        ->take(8)
-        ->get();
+    $featuredProducts = \App\Models\ModelProduct::with('kategori')->where('user_id', $client->user_id)->where('product_status', 'active')->where('product_featured', true)->latest('product_id')->take(8)->get();
 
-    $latestProducts = \App\Models\ModelProduct::with('kategori')
-        ->where('user_id', $client->user_id)
-        ->where('product_status', 'active')
-        ->latest('product_id')
-        ->take(12)
-        ->get();
+    $latestProducts = \App\Models\ModelProduct::with('kategori')->where('user_id', $client->user_id)->where('product_status', 'active')->latest('product_id')->take(12)->get();
 
-    return view('front.client.home', compact(
-        'client',
-        'sliders',
-        'kategori',
-        'featuredProducts',
-        'latestProducts'
-    ));
+    return view('front.client.home', compact('client', 'sliders', 'kategori', 'featuredProducts', 'latestProducts'));
 })->name('client.public.site');

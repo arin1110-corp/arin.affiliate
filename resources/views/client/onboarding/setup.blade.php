@@ -26,14 +26,14 @@
             </div>
             <div>
                 <label class="text-sm text-gray-600">Link Website</label>
-
                 <div class="flex mt-1">
-                    <span class="px-4 py-3 bg-gray-100 border border-r-0 rounded-l-xl text-sm text-gray-500">
-                        {{ url('/') }}/
-                    </span>
+                    <input type="text" name="user_subdomain"
+                        value="{{ old('user_subdomain', $user->user_subdomain) }}"
+                        class="flex-1 p-3 border border-r-0 rounded-l-xl" placeholder="nama-toko" required>
 
-                    <input type="text" name="user_slug" value="{{ old('user_slug', $user->user_slug) }}"
-                        class="flex-1 p-3 border rounded-r-xl" required>
+                    <span class="px-4 py-3 bg-gray-100 border rounded-r-xl text-sm text-gray-500 whitespace-nowrap">
+                        .{{ config('app.domain') }}
+                    </span>
                 </div>
 
                 <p class="text-xs text-gray-400 mt-1">

@@ -1,3 +1,6 @@
+@php
+    $websiteUrl = 'https://' . 'nama-store' . '.' . config('app.domain');
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
@@ -105,7 +108,8 @@
                     <p class="mt-2">
                         Link website kamu nanti:
                         <br>
-                        <b>{{ url('/nama-brand-kamu') }}</b>
+                        <b>{{ $websiteUrl }}</b>
+
                     </p>
                 </div>
 

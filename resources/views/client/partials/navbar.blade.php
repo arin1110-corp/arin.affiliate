@@ -1,7 +1,9 @@
 @php
     $user = auth('arin')->user();
 @endphp
-
+@php
+    $websiteUrl = 'https://' . $user->user_subdomain . '.' . config('app.domain');
+@endphp
 <header class="bg-white/80 backdrop-blur-xl border-b theme-border px-6 py-4 flex items-center justify-between">
 
     <div>
@@ -16,7 +18,7 @@
 
     <div class="flex items-center gap-4">
 
-        <a href="{{ url('/'.$user->user_slug) }}"
+        <a href="{{ $websiteUrl }}"
            target="_blank"
            class="hidden md:inline-block px-4 py-2 rounded-xl text-sm theme-soft theme-text">
             Lihat Website

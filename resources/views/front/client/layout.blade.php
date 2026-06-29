@@ -1,3 +1,6 @@
+@php
+    $appSetting = \App\Models\ModelSetting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
@@ -247,9 +250,7 @@
         </div>
 
         <div class="text-center text-xs text-slate-400 pb-6 border-t theme-border pt-6">
-            © {{ date('Y') }} {{ $client->user_brand_name ?? 'ARIN Store' }}.
-            <br>
-            Powered by <span class="theme-text font-semibold">ARIN Affiliate</span>
+            {{ $appSetting->footer_text ?? '© ' . date('Y') . ' ' . ($landing->site_name ?? $appSetting->app_name ?? 'Affilio Store') . '. Crafted by ARIN Digital Creative & IT Solutions.' }}
         </div>
     </footer>
 

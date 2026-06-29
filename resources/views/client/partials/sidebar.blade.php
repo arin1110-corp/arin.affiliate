@@ -26,13 +26,7 @@
         <div class="flex items-center gap-3">
 
             @if ($user->user_logo)
-                <img src="{{ asset($user->user_logo) }}"
-                    class="
-                        w-12
-                        h-12
-                        rounded-2xl
-                        object-cover
-                    ">
+                <img src="{{ asset($user->user_logo) }}" class="w-12 h-12 rounded-2xl object-cover">
             @else
                 <div
                     class="
@@ -90,7 +84,9 @@
                 rounded-2xl
                 {{ request()->routeIs('client.dashboard') ? 'theme-menu-active' : 'theme-menu-hover' }}
             ">
+
             Dashboard
+
         </a>
 
         <a href="{{ route('client.kategori.index') }}"
@@ -101,7 +97,9 @@
                 rounded-2xl
                 {{ request()->routeIs('client.kategori.*') ? 'theme-menu-active' : 'theme-menu-hover' }}
             ">
+
             Kategori
+
         </a>
 
         <a href="{{ route('client.product.index') }}"
@@ -112,7 +110,9 @@
                 rounded-2xl
                 {{ request()->routeIs('client.product.*') ? 'theme-menu-active' : 'theme-menu-hover' }}
             ">
+
             Produk
+
         </a>
 
         <a href="{{ route('client.slider.index') }}"
@@ -123,10 +123,12 @@
                 rounded-2xl
                 {{ request()->routeIs('client.slider.*') ? 'theme-menu-active' : 'theme-menu-hover' }}
             ">
+
             Slider
+
         </a>
 
-        <a href="{{ route('client.payment.index') }}"
+        <a href="{{ route('client.payment.history') }}"
             class="
                 block
                 px-4
@@ -134,7 +136,9 @@
                 rounded-2xl
                 {{ request()->routeIs('client.payment.*') ? 'theme-menu-active' : 'theme-menu-hover' }}
             ">
+
             Pembayaran
+
         </a>
 
         <a href="{{ route('client.setting.index') }}"
@@ -145,7 +149,9 @@
                 rounded-2xl
                 {{ request()->routeIs('client.setting.*') ? 'theme-menu-active' : 'theme-menu-hover' }}
             ">
+
             Setting Website
+
         </a>
 
         <div class="pt-4 mt-4 border-t theme-border">
@@ -161,7 +167,9 @@
                     hover:bg-gray-200
                     transition
                 ">
+
                 🌐 Lihat Website
+
             </a>
 
         </div>

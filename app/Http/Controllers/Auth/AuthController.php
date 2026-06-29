@@ -65,7 +65,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = ModelUser::where('user_email', $request->email)->where('user_is_active', true)->first();
+        $user = ModelUser::where('user_email', $request->email)->first();
 
         if (!$user) {
             return redirect()
@@ -99,6 +99,14 @@ class AuthController extends Controller
                     'title' => 'Email Belum Diverifikasi',
                     'message' => 'Silakan cek email Anda dan lakukan verifikasi terlebih dahulu.',
                 ]);
+        }
+
+        if ($user->user_role !== 'superadmin' && !$user->user_is_active) {
+            Auth::guard('arin')->login($user);
+
+            $request->session()->regenerate();
+
+            return redirect()->route('client.payment.checkout');
         }
 
         Auth::guard('arin')->login($user);
@@ -246,6 +254,6 @@ class AuthController extends Controller
 
         session()->regenerate();
 
-        return redirect()->route('client.payment.checkout');
+        return redirect()->route('client.payment.checkout')->with('success', 'Email berhasil diverifikasi.');
     }
 }

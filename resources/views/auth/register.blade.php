@@ -151,7 +151,7 @@
                     </label>
 
                     <input type="text" name="user_brand_name" value="{{ old('user_brand_name') }}"
-                        placeholder="Contoh: Indra Picks"
+                        placeholder="Contoh: Affilio Store"
                         class="w-full mt-2 px-5 py-3 rounded-2xl border border-gray-200 focus:ring-2 outline-none"
                         style="
                             --tw-ring-color:

@@ -6,131 +6,258 @@
 @section('content')
 
 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
     <div>
-        <h1 class="text-2xl font-bold">Pembayaran</h1>
+        <h1 class="text-2xl font-bold">
+            Pembayaran
+        </h1>
+
         <p class="text-sm text-gray-500 mt-1">
-            Riwayat pembayaran ARIN.
+            Riwayat pembayaran dan status langganan website.
         </p>
     </div>
 
-    <a href="{{ route('client.payment.create') }}"
-       class="theme-button px-4 py-3 rounded-2xl text-center font-medium">
+    <a
+        href="{{ route('client.payment.checkout') }}"
+        class="theme-button px-5 py-3 rounded-2xl text-center font-medium">
+
         Bayar Sekarang
+
     </a>
+
 </div>
 
 @if(session('success'))
-    <div class="mb-4 p-3 bg-green-50 border border-green-200 text-green-600 rounded-xl">
+    <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl">
         {{ session('success') }}
     </div>
 @endif
 
 <div class="bg-white/80 backdrop-blur-xl border theme-border rounded-3xl shadow p-6 mb-6">
 
-    <h3 class="text-lg font-bold mb-4">Status Website</h3>
+    <h3 class="text-lg font-bold mb-5">
+        Status Langganan
+    </h3>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-        <div class="theme-soft border theme-border rounded-2xl p-4">
-            <p class="text-sm text-gray-500">Paket</p>
-            <h2 class="text-xl font-bold theme-text">
+        <div class="theme-soft border theme-border rounded-2xl p-5">
+
+            <p class="text-sm text-gray-500">
+                Paket
+            </p>
+
+            <h2 class="text-xl font-bold theme-text mt-1">
                 {{ ucfirst($user->user_package) }}
             </h2>
+
         </div>
 
-        <div class="theme-soft border theme-border rounded-2xl p-4">
-            <p class="text-sm text-gray-500">Expired</p>
-            <h2 class="text-xl font-bold theme-text">
-                {{ $user->user_expired_at ? $user->user_expired_at->format('d M Y') : '-' }}
+        <div class="theme-soft border theme-border rounded-2xl p-5">
+
+            <p class="text-sm text-gray-500">
+                Masa Aktif
+            </p>
+
+            <h2 class="text-xl font-bold theme-text mt-1">
+
+                @if($user->user_expired_at)
+                    {{ $user->user_expired_at->format('d M Y') }}
+                @else
+                    -
+                @endif
+
             </h2>
+
         </div>
 
-        <div class="theme-soft border theme-border rounded-2xl p-4">
-            <p class="text-sm text-gray-500">Status</p>
-            <h2 class="text-xl font-bold theme-text">
-                {{ $user->user_is_active ? 'Aktif' : 'Nonaktif' }}
+        <div class="theme-soft border theme-border rounded-2xl p-5">
+
+            <p class="text-sm text-gray-500">
+                Status
+            </p>
+
+            <h2 class="text-xl font-bold mt-1">
+
+                @if($user->user_is_active)
+
+                    <span class="text-green-600">
+                        Aktif
+                    </span>
+
+                @else
+
+                    <span class="text-red-500">
+                        Belum Aktif
+                    </span>
+
+                @endif
+
             </h2>
+
         </div>
 
     </div>
 
 </div>
 
-<div class="bg-white/80 backdrop-blur-xl border theme-border rounded-3xl shadow p-4 overflow-x-auto">
+<div class="bg-white/80 backdrop-blur-xl border theme-border rounded-3xl shadow overflow-hidden">
 
-    <table class="w-full text-sm">
-        <thead>
-            <tr class="text-left border-b">
-                <th class="p-3">Invoice</th>
-                <th class="p-3">Paket</th>
-                <th class="p-3">Nominal</th>
-                <th class="p-3">Metode</th>
-                <th class="p-3">Status</th>
-                <th class="p-3">Tanggal</th>
-                <th class="p-3">Link</th>
-            </tr>
-        </thead>
+    <div class="p-6 border-b theme-border">
 
-        <tbody>
-            @forelse($data as $item)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3 font-medium">
-                        {{ $item->payment_invoice }}
-                    </td>
+        <h3 class="font-bold text-lg">
+            Riwayat Pembayaran
+        </h3>
 
-                    <td class="p-3">
-                        {{ ucfirst($item->payment_package) }}
-                    </td>
+    </div>
 
-                    <td class="p-3 font-semibold theme-text">
-                        Rp {{ number_format($item->payment_amount, 0, ',', '.') }}
-                    </td>
+    <div class="overflow-x-auto">
 
-                    <td class="p-3">
-                        {{ $item->midtrans_payment_type ?? $item->payment_method ?? '-' }}
-                    </td>
+        <table class="w-full text-sm">
 
-                    <td class="p-3">
-                        @if($item->payment_status === 'approved')
-                            <span class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-xl">
-                                Lunas
-                            </span>
-                        @elseif($item->payment_status === 'rejected')
-                            <span class="px-2 py-1 text-xs bg-red-100 text-red-600 rounded-xl">
-                                Gagal
-                            </span>
-                        @else
-                            <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-xl">
-                                Menunggu
-                            </span>
-                        @endif
-                    </td>
+            <thead class="bg-gray-50">
 
-                    <td class="p-3">
-                        {{ $item->created_at->format('d M Y H:i') }}
-                    </td>
-
-                    <td class="p-3">
-                        @if($item->payment_status !== 'approved' && $item->midtrans_redirect_url)
-                            <a href="{{ $item->midtrans_redirect_url }}"
-                               target="_blank"
-                               class="px-3 py-1 theme-button rounded-xl text-xs">
-                                Bayar
-                            </a>
-                        @else
-                            -
-                        @endif
-                    </td>
-                </tr>
-            @empty
                 <tr>
-                    <td colspan="7" class="p-10 text-center text-gray-400">
-                        Belum ada riwayat pembayaran.
-                    </td>
+
+                    <th class="text-left p-4">
+                        Invoice
+                    </th>
+
+                    <th class="text-left p-4">
+                        Paket
+                    </th>
+
+                    <th class="text-left p-4">
+                        Nominal
+                    </th>
+
+                    <th class="text-left p-4">
+                        Metode
+                    </th>
+
+                    <th class="text-left p-4">
+                        Status
+                    </th>
+
+                    <th class="text-left p-4">
+                        Tanggal
+                    </th>
+
+                    <th class="text-left p-4">
+                        Bukti
+                    </th>
+
                 </tr>
-            @endforelse
-        </tbody>
-    </table>
+
+            </thead>
+
+            <tbody>
+
+                @forelse($data as $item)
+
+                    <tr class="border-t">
+
+                        <td class="p-4 font-medium">
+                            {{ $item->payment_invoice }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ ucfirst($item->payment_package) }}
+                        </td>
+
+                        <td class="p-4 font-semibold theme-text">
+
+                            Rp
+                            {{ number_format($item->payment_amount,0,',','.') }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            {{ $item->payment_method ?? '-' }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            @if($item->payment_status == 'paid')
+
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-xl text-xs">
+                                    Lunas
+                                </span>
+
+                            @elseif($item->payment_status == 'pending')
+
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-xl text-xs">
+                                    Menunggu
+                                </span>
+
+                            @elseif($item->payment_status == 'rejected')
+
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-xl text-xs">
+                                    Ditolak
+                                </span>
+
+                            @else
+
+                                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-xl text-xs">
+                                    Gagal
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                        <td class="p-4">
+
+                            {{ $item->created_at?->format('d M Y H:i') }}
+
+                        </td>
+
+                        <td class="p-4">
+
+                            @if($item->payment_proof)
+
+                                <a
+                                    href="{{ asset($item->payment_proof) }}"
+                                    target="_blank"
+                                    class="theme-button px-3 py-2 rounded-xl text-xs">
+
+                                    Lihat
+
+                                </a>
+
+                            @else
+
+                                -
+
+                            @endif
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center text-gray-400 py-16">
+
+                            Belum ada riwayat pembayaran.
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 

@@ -124,7 +124,10 @@
         @if (isset($kategori) && $kategori->count())
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach ($kategori as $kat)
-                    <a href="{{ route('front.kategori.show', $kat->kategori_slug) }}"
+                    <a href="{{ route('front.kategori.show', [
+                        'clientSlug' => $client->user_slug,
+                        'slug' => $kat->kategori_slug,
+                    ]) }}"
                         class="block bg-white/70 backdrop-blur-xl border theme-border rounded-3xl p-4 hover:shadow-xl transition">
 
                         @if ($kat->kategori_thumbnail)

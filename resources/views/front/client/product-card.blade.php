@@ -1,10 +1,14 @@
-<div class="bg-white/70 backdrop-blur-xl border theme-border rounded-3xl overflow-hidden hover:shadow-xl transition">
+<a
+    href="{{ route('front.product.show', [$client->user_slug, $product->product_slug]) }}"
+    class="block bg-white/70 backdrop-blur-xl border theme-border rounded-3xl overflow-hidden hover:shadow-xl transition">
 
     @if($product->product_thumbnail)
-        <img src="{{ asset($product->product_thumbnail) }}"
-             class="w-full h-44 object-cover">
+        <img
+            src="{{ asset($product->product_thumbnail) }}"
+            class="w-full h-44 object-cover">
     @else
-        <div class="w-full h-44 theme-soft flex items-center justify-center theme-text font-bold">
+        <div
+            class="w-full h-44 theme-soft flex items-center justify-center theme-text font-bold">
             {{ strtoupper(substr($product->product_nama, 0, 1)) }}
         </div>
     @endif
@@ -12,6 +16,7 @@
     <div class="p-4">
 
         <div class="flex items-center gap-2 mb-2">
+
             @if($product->kategori)
                 <span class="text-xs theme-soft theme-text px-2 py-1 rounded-xl">
                     {{ $product->kategori->kategori_nama }}
@@ -23,6 +28,7 @@
                     Unggulan
                 </span>
             @endif
+
         </div>
 
         <h3 class="font-semibold leading-snug">
@@ -41,11 +47,22 @@
             </p>
         @endif
 
-        <a href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"
-           target="_blank"
-           class="block text-center mt-4 theme-button py-2 rounded-2xl text-sm">
-            Beli Sekarang
-        </a>
+        @if($product->product_link)
+            <div class="mt-4">
+
+                <a
+                    href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"
+                    target="_blank"
+                    onclick="event.stopPropagation();"
+                    class="block text-center theme-button py-2 rounded-2xl text-sm">
+
+                    Beli Sekarang
+
+                </a>
+
+            </div>
+        @endif
 
     </div>
-</div>
+
+</a>

@@ -300,7 +300,21 @@ Route::middleware(['arinauth', 'client'])
 | Contoh: dev.affilio.store/username/go/produk
 |--------------------------------------------------------------------------
 */
+/*
+|--------------------------------------------------------------------------
+| PUBLIC KATEGORI & PRODUCT PAGE
+|--------------------------------------------------------------------------
+*/
 
+Route::get(
+    '/{clientSlug}/kategori/{slug}',
+    [HomeController::class, 'kategori']
+)->name('front.kategori.show');
+
+Route::get(
+    '/{clientSlug}/produk/{slug}',
+    [HomeController::class, 'product']
+)->name('front.product.show');
 Route::get('/{clientSlug}/go/{productSlug}', [ProductClickController::class, 'click'])->name('front.product.click');
 
 /*

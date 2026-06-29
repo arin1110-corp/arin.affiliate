@@ -178,20 +178,20 @@ class AuthController extends Controller
             | Trial 3 hari sebelum wajib bayar.
             | Promo tetap dicatat, tapi trial hanya 3 hari.
             */
-            'user_is_trial' => true,
-            'user_trial_end_at' => now()->addDays(3),
+            'user_is_trial' => false,
+            'user_trial_end_at' => null,
+            'user_expired_at' => null,
+
+            'user_payment_status' => 'unpaid',
+            'user_is_active' => false,
 
             /*
             | Website aktif sementara selama trial.
             | Setelah payment nanti expired_at diperpanjang.
             */
-            'user_expired_at' => now()->addDays(3),
 
             'user_theme_primary' => '#ec4899',
             'user_theme_secondary' => '#fdf2f8',
-
-            'user_is_setup_done' => false,
-            'user_is_active' => true,
         ]);
 
         Mail::to($user->user_email)->send(new VerifyEmailMail($user));
@@ -246,6 +246,6 @@ class AuthController extends Controller
 
         session()->regenerate();
 
-        return redirect()->route('client.setup.index')->with('success', 'Email berhasil diverifikasi.');
+        return redirect()->route('client.payment.checkout');
     }
 }

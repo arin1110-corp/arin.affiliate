@@ -21,8 +21,6 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingController;
 
-use App\Http\Controllers\MidtransNotificationController;
-
 /*
 |--------------------------------------------------------------------------
 | PUBLIC CLIENT SUBDOMAIN
@@ -57,7 +55,10 @@ Route::domain('{subdomain}.' . config('app.domain'))->group(function () {
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('front.home');
+
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('client.verify.email');
+
+Route::post('/payment/callback', [ClientPaymentController::class, 'callback'])->name('payment.callback');
 
 /*
 |--------------------------------------------------------------------------
@@ -74,14 +75,6 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'storeRegister'])->name('register.store');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-/*
-|--------------------------------------------------------------------------
-| MIDTRANS NOTIFICATION
-|--------------------------------------------------------------------------
-*/
-
-Route::post('/midtrans/notification', [MidtransNotificationController::class, 'handle'])->name('midtrans.notification');
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +137,9 @@ Route::middleware(['arinauth', 'superadmin'])
 
     Route::get('/payment', [AdminPaymentController::class, 'index'])->name('admin.payment.index');
 
+    Route::patch('/payment/{id}/approve', [AdminPaymentController::class, 'approve'])->name('admin.payment.approve');
+
+    Route::patch('/payment/{id}/reject', [AdminPaymentController::class, 'reject'])->name('admin.payment.reject');
     Route::get('/payment/{id}', [AdminPaymentController::class, 'show'])->name('admin.payment.show');
 
     /*
@@ -193,6 +189,26 @@ Route::middleware(['arinauth', 'client'])
     Route::get('/setup', [OnboardingController::class, 'setupIndex'])->name('client.setup.index');
 
     Route::post('/setup', [OnboardingController::class, 'setupStore'])->name('client.setup.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAYMENT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/payment', [ClientPaymentController::class, 'checkout'])->name('client.payment.checkout');
+
+    Route::post('/payment/process', [ClientPaymentController::class, 'process'])->name('client.payment.process');
+
+    Route::post('/payment/manual', [ClientPaymentController::class, 'manualStore'])->name('client.payment.manual.store');
+
+    Route::get('/payment/waiting', [ClientPaymentController::class, 'waiting'])->name('client.payment.waiting');
+
+    Route::get('/payment/finish', [ClientPaymentController::class, 'finish'])->name('client.payment.finish');
+
+    Route::get('/payment/check', [ClientPaymentController::class, 'check'])->name('client.payment.check');
+
+    Route::get('/payment/history', [ClientPaymentController::class, 'history'])->name('client.payment.history');
 
     Route::middleware('client.onboarding')->group(function () {
         Route::get('/dashboard', function () {
@@ -274,13 +290,7 @@ Route::middleware(['arinauth', 'client'])
             | PAYMENT
             |--------------------------------------------------------------------------
             */
-
-        Route::get('/payment', [ClientPaymentController::class, 'index'])->name('client.payment.index');
-
-        Route::get('/payment/create', [ClientPaymentController::class, 'create'])->name('client.payment.create');
-
-        Route::post('/payment', [ClientPaymentController::class, 'store'])->name('client.payment.store');
-        });
+    });
     });
 
 /*

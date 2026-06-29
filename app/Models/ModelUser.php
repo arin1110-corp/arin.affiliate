@@ -13,7 +13,7 @@ class ModelUser extends Authenticatable
     protected $table = 'arin_users';
     protected $primaryKey = 'user_id';
 
-    protected $fillable = ['user_nama', 'user_email', 'email_verified_at', 'user_email_verified_at', 'user_email_verify_token', 'user_password', 'user_slug', 'user_brand_name', 'user_tagline', 'user_description', 'user_logo', 'user_favicon', 'user_meta_title', 'user_meta_description', 'user_theme_accent', 'user_footer_text', 'user_whatsapp', 'user_instagram', 'user_tiktok', 'user_theme_primary', 'user_theme_secondary', 'user_is_setup_done', 'user_domain', 'user_subdomain', 'user_role', 'user_package', 'user_is_promo', 'user_promo_batch', 'user_promo_price', 'user_package_started_at', 'user_promo_until', 'user_is_trial', 'user_trial_end_at', 'user_expired_at', 'user_is_active'];
+    protected $fillable = ['user_nama', 'user_email', 'email_verified_at', 'user_email_verified_at', 'user_email_verify_token', 'user_password', 'user_slug', 'user_brand_name', 'user_tagline', 'user_description', 'user_logo', 'user_favicon', 'user_meta_title', 'user_meta_description', 'user_theme_accent', 'user_footer_text', 'user_whatsapp', 'user_instagram', 'user_tiktok', 'user_theme_primary', 'user_theme_secondary', 'user_is_setup_done', 'user_domain', 'user_subdomain', 'user_role', 'user_package', 'user_is_promo', 'user_promo_batch', 'user_promo_price', 'user_package_started_at', 'user_promo_until', 'user_is_trial', 'user_trial_end_at', 'user_expired_at', 'user_is_active', 'user_payment_status', 'user_last_payment_at', 'user_next_billing_at', 'user_invoice_number'];
 
     protected $hidden = ['user_password'];
 
@@ -29,6 +29,8 @@ class ModelUser extends Authenticatable
         'user_is_trial' => 'boolean',
         'user_is_setup_done' => 'boolean',
         'user_is_promo' => 'boolean',
+        'user_last_payment_at' => 'datetime',
+        'user_next_billing_at' => 'datetime',
     ];
 
     public function getAuthPassword()

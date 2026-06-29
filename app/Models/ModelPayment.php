@@ -12,32 +12,17 @@ class ModelPayment extends Model
     protected $table = 'arin_payments';
     protected $primaryKey = 'payment_id';
 
-    protected $fillable = [
-        'user_id',
-        'payment_invoice',
-        'midtrans_order_id',
-        'midtrans_transaction_id',
-        'midtrans_payment_type',
-        'midtrans_transaction_status',
-        'midtrans_fraud_status',
-        'midtrans_snap_token',
-        'midtrans_redirect_url',
-        'payment_package',
-        'payment_amount',
-        'payment_method',
-        'payment_proof',
-        'payment_status',
-        'payment_note',
-        'paid_at',
-        'approved_at',
-        'expired_at',
-    ];
+    protected $fillable = ['user_id', 'payment_invoice', 'midtrans_order_id', 'midtrans_transaction_id', 'midtrans_payment_type', 'midtrans_transaction_status', 'midtrans_fraud_status', 'midtrans_snap_token', 'midtrans_redirect_url', 'payment_package', 'payment_amount', 'payment_method', 'payment_proof', 'payment_status', 'payment_note', 'paid_at', 'approved_at', 'expired_at'];
 
     protected $casts = [
         'payment_amount' => 'decimal:0',
         'paid_at' => 'datetime',
         'approved_at' => 'datetime',
         'expired_at' => 'datetime',
+
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function user()

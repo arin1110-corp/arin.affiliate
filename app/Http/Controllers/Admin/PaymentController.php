@@ -9,19 +9,15 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $data = ModelPayment::with('user')
-            ->latest('payment_id')
-            ->get();
+        $payments = ModelPayment::with('user')->latest('payment_id')->paginate(20);
 
-        return view('admin.payment.index', compact('data'));
+        return view('admin.payment.index', compact('payments'));
     }
 
     public function show($id)
     {
-        $item = ModelPayment::with('user')
-            ->where('payment_id', $id)
-            ->firstOrFail();
+        $payment = ModelPayment::with('user')->findOrFail($id);
 
-        return view('admin.payment.show', compact('item'));
+        return view('admin.payment.show', compact('payment'));
     }
 }

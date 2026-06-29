@@ -94,7 +94,7 @@
 
             @endif
 
-            @if($product->product_link)
+            @if($product->product_affiliate_link)
 
                 <a
                     href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"

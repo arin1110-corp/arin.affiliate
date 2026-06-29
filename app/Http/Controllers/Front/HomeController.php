@@ -42,7 +42,7 @@ class HomeController extends Controller
 
         $products = ModelProduct::with('kategori')
             ->where('user_id', $client->user_id)
-            ->where('kategori_id', $kategori->kategori_id)
+            ->where('product_kategori', $kategori->kategori_id)
             ->where('product_status', 'active')
             ->latest('product_id')
             ->paginate(12);
@@ -71,7 +71,7 @@ class HomeController extends Controller
 
         $relatedProducts = ModelProduct::with('kategori')
             ->where('user_id', $client->user_id)
-            ->where('kategori_id', $product->kategori_id)
+            ->where('product_kategori', $product->kategori_id)
             ->where('product_id', '!=', $product->product_id)
             ->where('product_status', 'active')
             ->take(4)

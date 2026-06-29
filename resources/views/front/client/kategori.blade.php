@@ -1,17 +1,20 @@
 @extends('front.client.layout')
 
+@section('meta_title', $kategori->kategori_meta_title ?? $kategori->kategori_nama)
+@section('meta_description', $kategori->kategori_meta_description ?? $kategori->kategori_deskripsi)
+
 @section('content')
 
 <section class="max-w-7xl mx-auto px-4 py-10">
 
-    <div class="mb-10">
+    <div class="bg-white/70 border theme-border rounded-[32px] p-8 shadow-xl mb-8">
 
-        <h1 class="text-4xl font-bold">
+        <h1 class="text-3xl md:text-5xl font-bold theme-text">
             {{ $kategori->kategori_nama }}
         </h1>
 
         @if($kategori->kategori_deskripsi)
-            <p class="text-slate-500 mt-3">
+            <p class="text-slate-500 mt-4 max-w-2xl">
                 {{ $kategori->kategori_deskripsi }}
             </p>
         @endif
@@ -32,9 +35,19 @@
 
         @empty
 
-            <div class="col-span-full text-center py-16 text-slate-400">
+            <div
+                class="
+                    col-span-full
+                    bg-white/70
+                    border
+                    theme-border
+                    rounded-3xl
+                    p-10
+                    text-center
+                    text-slate-400
+                ">
 
-                Belum ada produk pada kategori ini.
+                Belum ada produk aktif pada kategori ini.
 
             </div>
 

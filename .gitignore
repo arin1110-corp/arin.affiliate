@@ -18,6 +18,8 @@
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+/public/uploads/payment-proof/
+/public/uploads/payment/
 /storage/*.key
 /storage/pail
 /vendor

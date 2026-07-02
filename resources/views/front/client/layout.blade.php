@@ -14,9 +14,10 @@
     <meta name="description" content="{{ $client->user_meta_description ?? ($client->user_description ?? '') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    @if($client->user_favicon)
+    @if ($client->user_favicon)
         <link rel="icon" href="{{ asset($client->user_favicon) }}">
     @endif
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -66,10 +67,9 @@
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b theme-border">
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
-            <a href="{{ url('/'.$client->user_slug) }}" class="flex items-center gap-3">
-                @if($client->user_logo)
-                    <img src="{{ asset($client->user_logo) }}"
-                         class="w-11 h-11 rounded-2xl object-cover">
+            <a href="{{ url('/' . $client->user_slug) }}" class="flex items-center gap-3">
+                @if ($client->user_logo)
+                    <img src="{{ asset($client->user_logo) }}" class="w-11 h-11 rounded-2xl object-cover">
                 @else
                     <div class="w-11 h-11 rounded-2xl theme-button flex items-center justify-center font-bold">
                         {{ strtoupper(substr($client->user_brand_name ?? 'A', 0, 1)) }}
@@ -88,7 +88,7 @@
             </a>
 
             <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="{{ url('/'.$client->user_slug) }}" class="text-slate-600 hover:theme-text">
+                <a href="{{ url('/' . $client->user_slug) }}" class="text-slate-600 hover:theme-text">
                     Home
                 </a>
 
@@ -103,31 +103,26 @@
 
             <div class="hidden md:flex items-center gap-2">
 
-                @if($client->user_whatsapp)
-                    <a href="https://wa.me/{{ $client->user_whatsapp }}"
-                       target="_blank"
-                       class="w-10 h-10 rounded-2xl bg-green-100 hover:bg-green-500 hover:text-white transition flex items-center justify-center text-green-600">
+                @if ($client->user_whatsapp)
+                    <a href="https://wa.me/{{ $client->user_whatsapp }}" target="_blank"
+                        class="w-10 h-10 rounded-2xl bg-green-100 hover:bg-green-500 hover:text-white transition flex items-center justify-center text-green-600">
                         <i data-lucide="message-circle" class="w-5 h-5"></i>
                     </a>
                 @endif
 
-                @if($client->user_instagram)
-                    <a href="{{ $client->user_instagram }}"
-                       target="_blank"
-                       class="w-10 h-10 rounded-2xl bg-pink-100 hover:bg-pink-500 hover:text-white transition flex items-center justify-center text-pink-600">
+                @if ($client->user_instagram)
+                    <a href="{{ $client->user_instagram }}" target="_blank"
+                        class="w-10 h-10 rounded-2xl bg-pink-100 hover:bg-pink-500 hover:text-white transition flex items-center justify-center text-pink-600">
                         <i class="fa-brands fa-instagram text-lg"></i>
                     </a>
                 @endif
 
-                @if($client->user_tiktok)
-                    <a href="{{ $client->user_tiktok }}"
-                       target="_blank"
-                       class="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-900 hover:text-white transition flex items-center justify-center text-slate-900">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24"
-                             fill="currentColor"
-                             class="w-5 h-5">
-                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.68h-3.18v12.36a2.9 2.9 0 1 1-2.9-2.9c.24 0 .47.03.69.08V8.32a6.1 6.1 0 0 0-.69-.04A6.08 6.08 0 1 0 15.82 14V8.73a8 8 0 0 0 4.77 1.58V6.69z"/>
+                @if ($client->user_tiktok)
+                    <a href="{{ $client->user_tiktok }}" target="_blank"
+                        class="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-900 hover:text-white transition flex items-center justify-center text-slate-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                            <path
+                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.68h-3.18v12.36a2.9 2.9 0 1 1-2.9-2.9c.24 0 .47.03.69.08V8.32a6.1 6.1 0 0 0-.69-.04A6.08 6.08 0 1 0 15.82 14V8.73a8 8 0 0 0 4.77 1.58V6.69z" />
                         </svg>
                     </a>
                 @endif
@@ -148,9 +143,8 @@
             <div>
                 <div class="flex items-center gap-3">
 
-                    @if($client->user_logo)
-                        <img src="{{ asset($client->user_logo) }}"
-                             class="w-12 h-12 rounded-2xl object-cover">
+                    @if ($client->user_logo)
+                        <img src="{{ asset($client->user_logo) }}" class="w-12 h-12 rounded-2xl object-cover">
                     @else
                         <div class="w-12 h-12 rounded-2xl theme-button flex items-center justify-center font-bold">
                             {{ strtoupper(substr($client->user_brand_name ?? 'A', 0, 1)) }}
@@ -170,7 +164,7 @@
                 </div>
 
                 <p class="text-sm text-slate-500 mt-4">
-                    {{ $client->user_footer_text ?? $client->user_description ?? 'Rekomendasi produk affiliate pilihan.' }}
+                    {{ $client->user_footer_text ?? ($client->user_description ?? 'Rekomendasi produk affiliate pilihan.') }}
                 </p>
             </div>
 
@@ -181,18 +175,15 @@
                 </h4>
 
                 <div class="space-y-2 text-sm">
-                    <a href="{{ url('/'.$client->user_slug) }}"
-                       class="block text-slate-500 hover:theme-text">
+                    <a href="{{ url('/' . $client->user_slug) }}" class="block text-slate-500 hover:theme-text">
                         Home
                     </a>
 
-                    <a href="#produk"
-                       class="block text-slate-500 hover:theme-text">
+                    <a href="#produk" class="block text-slate-500 hover:theme-text">
                         Produk
                     </a>
 
-                    <a href="#kategori"
-                       class="block text-slate-500 hover:theme-text">
+                    <a href="#kategori" class="block text-slate-500 hover:theme-text">
                         Kategori
                     </a>
                 </div>
@@ -206,41 +197,34 @@
 
                 <div class="flex gap-3">
 
-                    @if($client->user_whatsapp)
-                        <a href="https://wa.me/{{ $client->user_whatsapp }}"
-                           target="_blank"
-                           title="WhatsApp"
-                           class="w-11 h-11 rounded-2xl bg-green-100 hover:bg-green-500 hover:text-white transition flex items-center justify-center text-green-600">
+                    @if ($client->user_whatsapp)
+                        <a href="https://wa.me/{{ $client->user_whatsapp }}" target="_blank" title="WhatsApp"
+                            class="w-11 h-11 rounded-2xl bg-green-100 hover:bg-green-500 hover:text-white transition flex items-center justify-center text-green-600">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                         </a>
                     @endif
 
-                    @if($client->user_instagram)
-                        <a href="{{ $client->user_instagram }}"
-                           target="_blank"
-                           title="Instagram"
-                           class="w-11 h-11 rounded-2xl bg-pink-100 hover:bg-pink-500 hover:text-white transition flex items-center justify-center text-pink-600">
+                    @if ($client->user_instagram)
+                        <a href="{{ $client->user_instagram }}" target="_blank" title="Instagram"
+                            class="w-11 h-11 rounded-2xl bg-pink-100 hover:bg-pink-500 hover:text-white transition flex items-center justify-center text-pink-600">
                             <i class="fa-brands fa-instagram text-lg"></i>
                         </a>
                     @endif
 
-                    @if($client->user_tiktok)
-                        <a href="{{ $client->user_tiktok }}"
-                           target="_blank"
-                           title="TikTok"
-                           class="w-11 h-11 rounded-2xl bg-slate-100 hover:bg-slate-900 hover:text-white transition flex items-center justify-center text-slate-900">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 24 24"
-                                 fill="currentColor"
-                                 class="w-5 h-5">
-                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.68h-3.18v12.36a2.9 2.9 0 1 1-2.9-2.9c.24 0 .47.03.69.08V8.32a6.1 6.1 0 0 0-.69-.04A6.08 6.08 0 1 0 15.82 14V8.73a8 8 0 0 0 4.77 1.58V6.69z"/>
+                    @if ($client->user_tiktok)
+                        <a href="{{ $client->user_tiktok }}" target="_blank" title="TikTok"
+                            class="w-11 h-11 rounded-2xl bg-slate-100 hover:bg-slate-900 hover:text-white transition flex items-center justify-center text-slate-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="w-5 h-5">
+                                <path
+                                    d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.68h-3.18v12.36a2.9 2.9 0 1 1-2.9-2.9c.24 0 .47.03.69.08V8.32a6.1 6.1 0 0 0-.69-.04A6.08 6.08 0 1 0 15.82 14V8.73a8 8 0 0 0 4.77 1.58V6.69z" />
                             </svg>
                         </a>
                     @endif
 
                 </div>
 
-                @if(!$client->user_whatsapp && !$client->user_instagram && !$client->user_tiktok)
+                @if (!$client->user_whatsapp && !$client->user_instagram && !$client->user_tiktok)
                     <p class="text-sm text-slate-400">
                         Belum ada sosial media.
                     </p>
@@ -250,13 +234,33 @@
         </div>
 
         <div class="text-center text-xs text-slate-400 pb-6 border-t theme-border pt-6">
-            {{ $appSetting->footer_text ?? '© ' . date('Y') . ' ' . ($landing->site_name ?? $appSetting->app_name ?? 'Affilio Store') . '. Crafted by ARIN Digital Creative & IT Solutions.' }}
+            {{ $appSetting->footer_text ?? '© ' . date('Y') . ' ' . ($landing->site_name ?? ($appSetting->app_name ?? 'Affilio Store')) . '. Crafted by ARIN Digital Creative & IT Solutions.' }}
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
         lucide.createIcons();
+        document.getElementById('searchProduct')
+            ?.addEventListener('keyup', function() {
+
+                let q = this.value.toLowerCase();
+
+                document.querySelectorAll('.product-item')
+                    .forEach(function(item) {
+
+                        const nama = item.dataset.name;
+                        const kategori = item.dataset.category;
+
+                        item.style.display =
+                            nama.includes(q) || kategori.includes(q) ?
+                            '' :
+                            'none';
+                    });
+
+            });
     </script>
 
 </body>
+
 </html>

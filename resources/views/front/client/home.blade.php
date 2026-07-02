@@ -122,36 +122,40 @@
         </div>
 
         @if (isset($kategori) && $kategori->count())
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                @foreach ($kategori as $kat)
-                    <a href="{{ route('front.kategori.show', [
-                        'clientSlug' => $client->user_slug,
-                        'slug' => $kat->kategori_slug,
-                    ]) }}"
-                        class="block bg-white/70 backdrop-blur-xl border theme-border rounded-3xl p-4 hover:shadow-xl transition">
+            <div class="swiper kategoriSwiper">
 
-                        @if ($kat->kategori_thumbnail)
-                            <img src="{{ asset($kat->kategori_thumbnail) }}"
-                                class="w-full h-32 object-cover rounded-2xl mb-4">
-                        @else
-                            <div
-                                class="w-full h-32 theme-soft rounded-2xl mb-4 flex items-center justify-center theme-text font-bold">
-                                {{ strtoupper(substr($kat->kategori_nama, 0, 1)) }}
-                            </div>
-                        @endif
+                <div class="swiper-wrapper">
 
-                        <h3 class="font-semibold">
-                            {{ $kat->kategori_nama }}
-                        </h3>
+                    @foreach ($kategori as $kat)
+                        <div class="swiper-slide !w-[180px]">
 
-                        @if ($kat->kategori_deskripsi)
-                            <p class="text-xs text-slate-400 mt-1">
-                                {{ Str::limit($kat->kategori_deskripsi, 60) }}
-                            </p>
-                        @endif
+                            <a href="{{ route('front.kategori.show', [
+                                'clientSlug' => $client->user_slug,
+                                'slug' => $kat->kategori_slug,
+                            ]) }}"
+                                class="block bg-white/70 backdrop-blur-xl border theme-border rounded-3xl p-4 hover:shadow-xl transition">
 
-                    </a>
-                @endforeach
+                                @if ($kat->kategori_thumbnail)
+                                    <img src="{{ asset($kat->kategori_thumbnail) }}"
+                                        class="w-full h-32 object-cover rounded-2xl mb-4">
+                                @else
+                                    <div
+                                        class="w-full h-32 theme-soft rounded-2xl mb-4 flex items-center justify-center theme-text font-bold">
+                                        {{ strtoupper(substr($kat->kategori_nama, 0, 1)) }}
+                                    </div>
+                                @endif
+
+                                <h3 class="font-semibold">
+                                    {{ $kat->kategori_nama }}
+                                </h3>
+
+                            </a>
+
+                        </div>
+                    @endforeach
+
+                </div>
+
             </div>
         @else
             <div class="bg-white/70 backdrop-blur-xl border theme-border rounded-3xl p-10 text-center">
@@ -189,14 +193,27 @@
     {{-- LATEST PRODUCT --}}
     <section id="produk" class="max-w-7xl mx-auto px-4 mt-14">
 
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex flex-col md:flex-row gap-4 justify-between">
+
             <h2 class="text-2xl font-bold">
                 Produk Terbaru
             </h2>
+
+            <input type="text" id="searchProduct" placeholder="Cari produk..."
+                class="
+            px-4
+            py-3
+            rounded-2xl
+            border
+            bg-white
+            w-full
+            md:w-80
+        ">
+
         </div>
 
         @if (isset($latestProducts) && $latestProducts->count())
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+            <div id="productContainer" class="grid grid-cols-2 md:grid-cols-4 gap-5">
                 @foreach ($latestProducts as $product)
                     @include('front.client.product-card', ['product' => $product, 'client' => $client])
                 @endforeach

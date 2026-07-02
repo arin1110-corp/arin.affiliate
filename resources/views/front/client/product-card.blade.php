@@ -1,6 +1,22 @@
 <a
-    href="{{ route('front.product.show', [$client->user_slug, $product->product_slug]) }}"
-    class="block bg-white/70 backdrop-blur-xl border theme-border rounded-3xl overflow-hidden hover:shadow-xl transition">
+    href="{{ route('front.product.show', [
+        'clientSlug' => $client->user_slug,
+        'slug' => $product->product_slug,
+    ]) }}"
+    class="
+        product-item
+        block
+        bg-white/70
+        backdrop-blur-xl
+        border
+        theme-border
+        rounded-3xl
+        overflow-hidden
+        hover:shadow-xl
+        transition
+    "
+    data-name="{{ strtolower($product->product_nama) }}"
+    data-category="{{ strtolower($product->kategori->kategori_nama ?? '') }}">
 
     @if($product->product_thumbnail)
         <img
@@ -15,7 +31,7 @@
 
     <div class="p-4">
 
-        <div class="flex items-center gap-2 mb-2">
+        <div class="flex items-center gap-2 mb-2 flex-wrap">
 
             @if($product->kategori)
                 <span class="text-xs theme-soft theme-text px-2 py-1 rounded-xl">
@@ -51,7 +67,10 @@
             <div class="mt-4">
 
                 <a
-                    href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"
+                    href="{{ route('front.product.click', [
+                        'clientSlug' => $client->user_slug,
+                        'slug' => $product->product_slug,
+                    ]) }}"
                     target="_blank"
                     onclick="event.stopPropagation();"
                     class="block text-center theme-button py-2 rounded-2xl text-sm">

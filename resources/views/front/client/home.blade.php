@@ -211,6 +211,7 @@
         ">
 
         </div>
+        <br>
 
         @if (isset($latestProducts) && $latestProducts->count())
             <div id="productContainer" class="grid grid-cols-2 md:grid-cols-4 gap-5">

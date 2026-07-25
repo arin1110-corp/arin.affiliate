@@ -87,7 +87,7 @@
                     Shopee
                 </label>
 
-                <input type="url" name="link_shopee" value="{{ old('link_shopee') }}"
+                <input type="url" name="product_link_shopee" value="{{ old('product_link_shopee') }}"
                     placeholder="https://shopee.co.id/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200">
             </div>
 
@@ -97,7 +97,7 @@
                     Tokopedia
                 </label>
 
-                <input type="url" name="link_tokopedia" value="{{ old('link_tokopedia') }}"
+                <input type="url" name="product_link_tokopedia" value="{{ old('product_link_tokopedia') }}"
                     placeholder="https://tokopedia.com/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200">
             </div>
 
@@ -107,7 +107,7 @@
                     Lazada
                 </label>
 
-                <input type="url" name="link_lazada" value="{{ old('link_lazada') }}"
+                <input type="url" name="product_link_lazada" value="{{ old('product_link_lazada') }}"
                     placeholder="https://lazada.co.id/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200">
             </div>
 
@@ -117,7 +117,7 @@
                     TikTok Shop
                 </label>
 
-                <input type="url" name="link_tiktok" value="{{ old('link_tiktok') }}"
+                <input type="url" name="product_link_tiktok" value="{{ old('product_link_tiktok') }}"
                     placeholder="https://shop.tiktok.com/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200">
             </div>
 
@@ -127,7 +127,7 @@
                     Blibli
                 </label>
 
-                <input type="url" name="link_blibli" value="{{ old('link_blibli') }}"
+                <input type="url" name="product_link_blibli" value="{{ old('product_link_blibli') }}"
                     placeholder="https://blibli.com/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200">
             </div>
 
@@ -137,7 +137,7 @@
                     Bukalapak
                 </label>
 
-                <input type="url" name="link_bukalapak" value="{{ old('link_bukalapak') }}"
+                <input type="url" name="product_link_bukalapak" value="{{ old('product_link_bukalapak') }}"
                     placeholder="https://bukalapak.com/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200">
             </div>
 

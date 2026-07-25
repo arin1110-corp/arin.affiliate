@@ -5,22 +5,17 @@
 
 @section('content')
 
-<section class="max-w-7xl mx-auto px-4 py-10">
+    <section class="max-w-7xl mx-auto px-4 py-10">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-        <div class="bg-white/70 border theme-border rounded-[32px] p-4 shadow-xl">
+            <div class="bg-white/70 border theme-border rounded-[32px] p-4 shadow-xl">
 
-            @if($product->product_thumbnail)
-
-                <img
-                    src="{{ asset($product->product_thumbnail) }}"
-                    class="w-full h-[420px] object-cover rounded-[24px]">
-
-            @else
-
-                <div
-                    class="
+                @if ($product->product_thumbnail)
+                    <img src="{{ asset($product->product_thumbnail) }}" class="w-full h-[420px] object-cover rounded-[24px]">
+                @else
+                    <div
+                        class="
                         w-full
                         h-[420px]
                         theme-soft
@@ -30,104 +25,189 @@
                         justify-center
                     ">
 
-                    <span class="text-7xl theme-text">
-                        {{ strtoupper(substr($product->product_nama,0,1)) }}
-                    </span>
+                        <span class="text-7xl theme-text">
+                            {{ strtoupper(substr($product->product_nama, 0, 1)) }}
+                        </span>
 
-                </div>
-
-            @endif
-
-        </div>
-
-        <div class="bg-white/70 border theme-border rounded-[32px] p-6 shadow-xl">
-
-            <div class="flex gap-2 mb-4">
-
-                @if($product->kategori)
-                    <span class="text-xs theme-soft theme-text px-3 py-1 rounded-xl">
-                        {{ $product->kategori->kategori_nama }}
-                    </span>
-                @endif
-
-                @if($product->product_featured)
-                    <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-xl">
-                        Unggulan
-                    </span>
+                    </div>
                 @endif
 
             </div>
 
-            <h1 class="text-3xl md:text-4xl font-bold">
-                {{ $product->product_nama }}
-            </h1>
+            <div class="bg-white/70 border theme-border rounded-[32px] p-6 shadow-xl">
 
-            @if($product->product_deskripsi_ringkas)
-                <p class="text-slate-600 mt-5">
-                    {{ $product->product_deskripsi_ringkas }}
-                </p>
-            @endif
+                <div class="flex gap-2 mb-4">
 
-            @if($product->product_harga)
+                    @if ($product->kategori)
+                        <span class="text-xs theme-soft theme-text px-3 py-1 rounded-xl">
+                            {{ $product->kategori->kategori_nama }}
+                        </span>
+                    @endif
 
-                <div class="mt-6">
-
-                    @if($product->product_harga_diskon)
-
-                        <p class="text-sm line-through text-slate-400">
-                            Rp {{ number_format($product->product_harga,0,',','.') }}
-                        </p>
-
-                        <p class="text-3xl font-bold theme-text">
-                            Rp {{ number_format($product->product_harga_diskon,0,',','.') }}
-                        </p>
-
-                    @else
-
-                        <p class="text-3xl font-bold theme-text">
-                            Rp {{ number_format($product->product_harga,0,',','.') }}
-                        </p>
-
+                    @if ($product->product_featured)
+                        <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-xl">
+                            Unggulan
+                        </span>
                     @endif
 
                 </div>
 
-            @endif
+                <h1 class="text-3xl md:text-4xl font-bold">
+                    {{ $product->product_nama }}
+                </h1>
 
-            @if($product->product_affiliate_link)
+                @if ($product->product_deskripsi_ringkas)
+                    <p class="text-slate-600 mt-5">
+                        {{ $product->product_deskripsi_ringkas }}
+                    </p>
+                @endif
 
-                <a
-                    href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="
-                        block
-                        text-center
-                        mt-8
-                        theme-button
-                        py-4
-                        rounded-2xl
-                        font-semibold
-                    ">
+                @if ($product->product_harga)
 
-                    Beli Sekarang
+                    <div class="mt-6">
 
-                </a>
+                        @if ($product->product_harga_diskon)
+                            <p class="text-sm line-through text-slate-400">
+                                Rp {{ number_format($product->product_harga, 0, ',', '.') }}
+                            </p>
 
-            @endif
+                            <p class="text-3xl font-bold theme-text">
+                                Rp {{ number_format($product->product_harga_diskon, 0, ',', '.') }}
+                            </p>
+                        @else
+                            <p class="text-3xl font-bold theme-text">
+                                Rp {{ number_format($product->product_harga, 0, ',', '.') }}
+                            </p>
+                        @endif
 
-            <p class="text-xs text-slate-400 mt-3 text-center">
-                Harga dan stok dapat berubah sesuai marketplace.
-            </p>
+                    </div>
+
+                @endif
+
+                @if ($product->product_affiliate_link)
+                    <a href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"
+                        target="_blank" rel="noopener noreferrer"
+                        class="
+            block
+            text-center
+            mt-8
+            theme-button
+            py-4
+            rounded-2xl
+            font-semibold
+        ">
+
+                        Beli Sekarang
+
+                    </a>
+                @endif
+
+
+                @php
+
+                    $marketplaces = [
+                        [
+                            'name' => 'Shopee',
+                            'link' => $product->link_shopee,
+                            'logo' => asset('assets/img/marketplace/shopee.svg'),
+                        ],
+
+                        [
+                            'name' => 'Tokopedia',
+                            'link' => $product->link_tokopedia,
+                            'logo' => asset('assets/img/marketplace/tokopedia.svg'),
+                        ],
+
+                        [
+                            'name' => 'Lazada',
+                            'link' => $product->link_lazada,
+                            'logo' => asset('assets/img/marketplace/lazada.svg'),
+                        ],
+
+                        [
+                            'name' => 'TikTok Shop',
+                            'link' => $product->link_tiktok,
+                            'logo' => asset('assets/img/marketplace/tiktok.svg'),
+                        ],
+
+                        [
+                            'name' => 'Blibli',
+                            'link' => $product->link_blibli,
+                            'logo' => asset('assets/img/marketplace/blibli.svg'),
+                        ],
+
+                        [
+                            'name' => 'Bukalapak',
+                            'link' => $product->link_bukalapak,
+                            'logo' => asset('assets/img/marketplace/bukalapak.svg'),
+                        ],
+                    ];
+
+                @endphp
+
+                @if (collect($marketplaces)->whereNotNull('link')->count())
+
+                    <div class="mt-6">
+
+                        <h3 class="text-sm font-semibold text-slate-700 mb-3">
+
+                            Available on
+
+                        </h3>
+
+                        <div class="rounded-2xl border border-slate-200 overflow-hidden">
+
+                            @foreach ($marketplaces as $marketplace)
+                                @continue(empty($marketplace['link']))
+
+                                <a href="{{ $marketplace['link'] }}" target="_blank" rel="noopener noreferrer"
+                                    class="flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition border-b last:border-b-0">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <img src="{{ $marketplace['logo'] }}" class="w-6 h-6 object-contain">
+
+                                        <span class="font-medium text-slate-700">
+
+                                            {{ $marketplace['name'] }}
+
+                                        </span>
+
+                                    </div>
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+
+                                    </svg>
+
+                                </a>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+                <p class="text-xs text-slate-400 mt-3 text-center">
+                    Harga dan stok dapat berubah sesuai marketplace.
+                </p>
+
+                <p class="text-xs text-slate-400 mt-3 text-center">
+                    Harga dan stok dapat berubah sesuai marketplace.
+                </p>
+
+            </div>
 
         </div>
 
-    </div>
-
-    @if($product->product_deskripsi)
-
-        <div
-            class="
+        @if ($product->product_deskripsi)
+            <div
+                class="
                 bg-white/70
                 border
                 theme-border
@@ -137,46 +217,40 @@
                 mt-8
             ">
 
-            <h2 class="text-2xl font-bold mb-4 theme-text">
-                Deskripsi Produk
-            </h2>
+                <h2 class="text-2xl font-bold mb-4 theme-text">
+                    Deskripsi Produk
+                </h2>
 
-            <div class="max-w-none text-slate-600 leading-relaxed">
-                {!! nl2br(e($product->product_deskripsi)) !!}
+                <div class="max-w-none text-slate-600 leading-relaxed">
+                    {!! nl2br(e($product->product_deskripsi)) !!}
+                </div>
+
             </div>
+        @endif
 
-        </div>
+        @if ($relatedProducts->count())
 
-    @endif
+            <div class="mt-12">
 
-    @if($relatedProducts->count())
+                <h2 class="text-2xl font-bold mb-6">
+                    Produk Terkait
+                </h2>
 
-        <div class="mt-12">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
 
-            <h2 class="text-2xl font-bold mb-6">
-                Produk Terkait
-            </h2>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-
-                @foreach($relatedProducts as $related)
-
-                    @include(
-                        'front.client.product-card',
-                        [
+                    @foreach ($relatedProducts as $related)
+                        @include('front.client.product-card', [
                             'product' => $related,
-                            'client' => $client
-                        ]
-                    )
+                            'client' => $client,
+                        ])
+                    @endforeach
 
-                @endforeach
+                </div>
 
             </div>
 
-        </div>
+        @endif
 
-    @endif
-
-</section>
+    </section>
 
 @endsection

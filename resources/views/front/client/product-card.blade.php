@@ -62,32 +62,32 @@
         @php
             $marketplace = [
                 [
-                    'link' => $product->link_shopee,
+                    'link' => $product->product_link_shopee,
                     'logo' => 'assets/img/marketplace/shopee.svg',
                     'name' => 'Shopee',
                 ],
                 [
-                    'link' => $product->link_tokopedia,
+                    'link' => $product->product_link_tokopedia,
                     'logo' => 'assets/img/marketplace/tokopedia.svg',
                     'name' => 'Tokopedia',
                 ],
                 [
-                    'link' => $product->link_lazada,
+                    'link' => $product->product_link_lazada,
                     'logo' => 'assets/img/marketplace/lazada.svg',
                     'name' => 'Lazada',
                 ],
                 [
-                    'link' => $product->link_tiktok,
+                    'link' => $product->product_link_tiktok,
                     'logo' => 'assets/img/marketplace/tiktok.svg',
                     'name' => 'TikTok Shop',
                 ],
                 [
-                    'link' => $product->link_blibli,
+                    'link' => $product->product_link_blibli,
                     'logo' => 'assets/img/marketplace/blibli.svg',
                     'name' => 'Blibli',
                 ],
                 [
-                    'link' => $product->link_bukalapak,
+                    'link' => $product->product_link_bukalapak,
                     'logo' => 'assets/img/marketplace/bukalapak.svg',
                     'name' => 'Bukalapak',
                 ],

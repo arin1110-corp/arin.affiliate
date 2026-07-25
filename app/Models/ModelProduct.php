@@ -24,6 +24,12 @@ class ModelProduct extends Model
         'product_total_click',
         'product_featured',
         'product_status',
+        'product_link_shopee',
+        'product_link_tokopedia',
+        'product_link_lazada',
+        'product_link_tiktok',
+        'product_link_blibli',
+        'product_link_bukalapak',
     ];
 
     protected $casts = [

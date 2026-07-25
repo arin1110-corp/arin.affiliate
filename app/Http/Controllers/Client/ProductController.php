@@ -45,6 +45,12 @@ class ProductController extends Controller
             'product_thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'product_deskripsi' => 'nullable|string',
             'product_status' => 'nullable|in:draft,active',
+            'product_link_shopee' => 'nullable|url',
+            'product_link_tokopedia' => 'nullable|url',
+            'product_link_lazada' => 'nullable|url',
+            'product_link_tiktok' => 'nullable|url',
+            'product_link_blibli' => 'nullable|url',
+            'product_link_bukalapak' => 'nullable|url',
         ]);
 
         $user = Auth::guard('arin')->user();
@@ -94,6 +100,12 @@ class ProductController extends Controller
             'product_total_click' => 0,
             'product_featured' => $request->has('product_featured'),
             'product_status' => $request->product_status ?? 'active',
+            'product_link_shopee' => $request->product_link_shopee,
+            'product_link_tokopedia' => $request->product_link_tokopedia,
+            'product_link_lazada' => $request->product_link_lazada,
+            'product_link_tiktok' => $request->product_link_tiktok,
+            'product_link_blibli' => $request->product_link_blibli,
+            'product_link_bukalapak' => $request->product_link_bukalapak
         ]);
 
         return redirect()
@@ -127,6 +139,12 @@ class ProductController extends Controller
             'product_thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'product_deskripsi' => 'nullable|string',
             'product_status' => 'nullable|in:draft,active',
+            'product_link_shopee' => 'nullable|url',
+            'product_link_tokopedia' => 'nullable|url',
+            'product_link_lazada' => 'nullable|url',
+            'product_link_tiktok' => 'nullable|url',
+            'product_link_blibli' => 'nullable|url',
+            'product_link_bukalapak' => 'nullable|url',
         ]);
 
         $user = Auth::guard('arin')->user();
@@ -183,6 +201,12 @@ class ProductController extends Controller
             'product_affiliate_link' => $request->product_affiliate_link,
             'product_featured' => $request->has('product_featured'),
             'product_status' => $request->product_status ?? 'active',
+            'product_link_shopee' => $request->product_link_shopee,
+            'product_link_tokopedia' => $request->product_link_tokopedia,
+            'product_link_lazada' => $request->product_link_lazada,
+            'product_link_tiktok' => $request->product_link_tiktok,
+            'product_link_blibli' => $request->product_link_blibli,
+            'product_link_bukalapak' => $request->product_link_bukalapak
         ]);
 
         return redirect()

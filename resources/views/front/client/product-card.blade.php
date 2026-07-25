@@ -1,8 +1,7 @@
-<a
-    href="{{ route('front.product.show', [
-        'clientSlug' => $client->user_slug,
-        'slug' => $product->product_slug,
-    ]) }}"
+<a href="{{ route('front.product.show', [
+    'clientSlug' => $client->user_slug,
+    'slug' => $product->product_slug,
+]) }}"
     class="
         product-item
         block
@@ -18,13 +17,10 @@
     data-name="{{ strtolower($product->product_nama) }}"
     data-category="{{ strtolower($product->kategori->kategori_nama ?? '') }}">
 
-    @if($product->product_thumbnail)
-        <img
-            src="{{ asset($product->product_thumbnail) }}"
-            class="w-full h-44 object-cover">
+    @if ($product->product_thumbnail)
+        <img src="{{ asset($product->product_thumbnail) }}" class="w-full h-44 object-cover">
     @else
-        <div
-            class="w-full h-44 theme-soft flex items-center justify-center theme-text font-bold">
+        <div class="w-full h-44 theme-soft flex items-center justify-center theme-text font-bold">
             {{ strtoupper(substr($product->product_nama, 0, 1)) }}
         </div>
     @endif
@@ -33,13 +29,13 @@
 
         <div class="flex items-center gap-2 mb-2 flex-wrap">
 
-            @if($product->kategori)
+            @if ($product->kategori)
                 <span class="text-xs theme-soft theme-text px-2 py-1 rounded-xl">
                     {{ $product->kategori->kategori_nama }}
                 </span>
             @endif
 
-            @if($product->product_featured)
+            @if ($product->product_featured)
                 <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-xl">
                     Unggulan
                 </span>
@@ -51,28 +47,82 @@
             {{ $product->product_nama }}
         </h3>
 
-        @if($product->product_deskripsi)
+        @if ($product->product_deskripsi)
             <p class="text-xs text-slate-400 mt-1">
                 {{ Str::limit($product->product_deskripsi, 60) }}
             </p>
         @endif
 
-        @if($product->product_harga)
+        @if ($product->product_harga)
             <p class="font-bold theme-text mt-3">
                 Rp {{ number_format($product->product_harga, 0, ',', '.') }}
             </p>
         @endif
 
-        @if($product->product_link)
+        @php
+            $marketplace = [
+                [
+                    'link' => $product->link_shopee,
+                    'logo' => 'assets/img/marketplace/shopee.svg',
+                    'name' => 'Shopee',
+                ],
+                [
+                    'link' => $product->link_tokopedia,
+                    'logo' => 'assets/img/marketplace/tokopedia.svg',
+                    'name' => 'Tokopedia',
+                ],
+                [
+                    'link' => $product->link_lazada,
+                    'logo' => 'assets/img/marketplace/lazada.svg',
+                    'name' => 'Lazada',
+                ],
+                [
+                    'link' => $product->link_tiktok,
+                    'logo' => 'assets/img/marketplace/tiktok.svg',
+                    'name' => 'TikTok Shop',
+                ],
+                [
+                    'link' => $product->link_blibli,
+                    'logo' => 'assets/img/marketplace/blibli.svg',
+                    'name' => 'Blibli',
+                ],
+                [
+                    'link' => $product->link_bukalapak,
+                    'logo' => 'assets/img/marketplace/bukalapak.svg',
+                    'name' => 'Bukalapak',
+                ],
+            ];
+
+            $available = collect($marketplace)->filter(fn($m) => !empty($m['link']));
+        @endphp
+
+        @if ($available->count())
+            <div class="flex items-center justify-between mt-3">
+
+                <div class="flex items-center -space-x-1">
+
+                    @foreach ($available as $m)
+                        <img src="{{ asset($m['logo']) }}" title="{{ $m['name'] }}"
+                            class="w-5 h-5 rounded-full bg-white border">
+                    @endforeach
+
+                </div>
+
+                <span class="text-xs text-slate-400">
+                    {{ $available->count() }} Marketplace
+                </span>
+
+            </div>
+        @endif
+
+        @if ($product->product_link)
             <div class="mt-4">
 
-                <a
-                    href="{{ route('front.product.click', [
-                        'clientSlug' => $client->user_slug,
-                        'slug' => $product->product_slug,
-                    ]) }}"
-                    target="_blank"
-                    onclick="event.stopPropagation();"
+                <a href="{{ route('front.product.click', [
+                    'clientSlug' => $client->user_slug,
+                    'slug' => $product->product_slug,
+                ]) }}"
+                    target="_blank" onclick="event.stopPropagation();"
                     class="block text-center theme-button py-2 rounded-2xl text-sm">
 
                     Beli Sekarang

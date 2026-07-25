@@ -108,37 +108,37 @@
                     $marketplaces = [
                         [
                             'name' => 'Shopee',
-                            'link' => $product->link_shopee,
+                            'link' => $product->product_link_shopee,
                             'logo' => asset('assets/img/marketplace/shopee.svg'),
                         ],
 
                         [
                             'name' => 'Tokopedia',
-                            'link' => $product->link_tokopedia,
+                            'link' => $product->product_link_tokopedia,
                             'logo' => asset('assets/img/marketplace/tokopedia.svg'),
                         ],
 
                         [
                             'name' => 'Lazada',
-                            'link' => $product->link_lazada,
+                            'link' => $product->product_link_lazada,
                             'logo' => asset('assets/img/marketplace/lazada.svg'),
                         ],
 
                         [
                             'name' => 'TikTok Shop',
-                            'link' => $product->link_tiktok,
+                            'link' => $product->product_link_tiktok,
                             'logo' => asset('assets/img/marketplace/tiktok.svg'),
                         ],
 
                         [
                             'name' => 'Blibli',
-                            'link' => $product->link_blibli,
+                            'link' => $product->product_link_blibli,
                             'logo' => asset('assets/img/marketplace/blibli.svg'),
                         ],
 
                         [
                             'name' => 'Bukalapak',
-                            'link' => $product->link_bukalapak,
+                            'link' => $product->product_link_bukalapak,
                             'logo' => asset('assets/img/marketplace/bukalapak.svg'),
                         ],
                     ];

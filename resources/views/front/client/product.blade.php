@@ -115,19 +115,19 @@
                         [
                             'name' => 'Tokopedia',
                             'link' => $product->product_link_tokopedia,
-                            'logo' => asset('assets/img/marketplace/tokopedia.svg'),
+                            'logo' => asset('assets/img/marketplace/tokopedia.png'),
                         ],
 
                         [
                             'name' => 'Lazada',
                             'link' => $product->product_link_lazada,
-                            'logo' => asset('assets/img/marketplace/lazada.svg'),
+                            'logo' => asset('assets/img/marketplace/lazada.png'),
                         ],
 
                         [
                             'name' => 'TikTok Shop',
                             'link' => $product->product_link_tiktok,
-                            'logo' => asset('assets/img/marketplace/tiktok.svg'),
+                            'logo' => asset('assets/img/marketplace/tiktok.png'),
                         ],
 
                         [
@@ -139,7 +139,7 @@
                         [
                             'name' => 'Bukalapak',
                             'link' => $product->product_link_bukalapak,
-                            'logo' => asset('assets/img/marketplace/bukalapak.svg'),
+                            'logo' => asset('assets/img/marketplace/bukalapak.png'),
                         ],
                     ];
 

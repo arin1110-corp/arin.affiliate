@@ -41,15 +41,6 @@
 
         <div>
             <label class="text-sm font-medium text-gray-600">
-                Link Affiliate <span class="text-red-500">*</span>
-            </label>
-            <input type="text" name="product_affiliate_link"
-                value="{{ old('product_affiliate_link', $item->product_affiliate_link) }}"
-                class="w-full mt-1 p-3 rounded-xl border border-gray-200" required>
-        </div>
-
-        <div>
-            <label class="text-sm font-medium text-gray-600">
                 Marketplace <span class="text-red-500">*</span>
             </label>
 

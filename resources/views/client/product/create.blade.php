@@ -55,17 +55,6 @@
             </p>
         </div>
 
-        <div>
-            <label class="text-sm font-medium text-gray-600">
-                Link Affiliate <span class="text-red-500">*</span>
-            </label>
-            <input type="text" name="product_affiliate_link" value="{{ old('product_affiliate_link') }}"
-                placeholder="https://shopee.co.id/..." class="w-full mt-1 p-3 rounded-xl border border-gray-200" required>
-            <p class="text-xs text-gray-400 mt-1">
-                Masukkan link affiliate Shopee, TikTok Shop, Tokopedia, atau marketplace lain.
-            </p>
-        </div>
-
         <hr class="border-gray-200">
 
         <div>

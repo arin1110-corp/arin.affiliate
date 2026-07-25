@@ -84,24 +84,6 @@
 
                 @endif
 
-                @if ($product->product_affiliate_link)
-                    <a href="{{ route('front.product.click', [$client->user_slug, $product->product_slug]) }}"
-                        target="_blank" rel="noopener noreferrer"
-                        class="
-            block
-            text-center
-            mt-8
-            theme-button
-            py-4
-            rounded-2xl
-            font-semibold
-        ">
-
-                        Beli Sekarang
-
-                    </a>
-                @endif
-
 
                 @php
 
@@ -191,11 +173,6 @@
                     </div>
 
                 @endif
-
-
-                <p class="text-xs text-slate-400 mt-3 text-center">
-                    Harga dan stok dapat berubah sesuai marketplace.
-                </p>
 
                 <p class="text-xs text-slate-400 mt-3 text-center">
                     Harga dan stok dapat berubah sesuai marketplace.

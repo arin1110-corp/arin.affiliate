@@ -99,14 +99,6 @@
         @if ($available->count())
             <div class="flex items-center justify-between mt-3">
 
-                <div class="flex items-center -space-x-1">
-
-                    @foreach ($available as $m)
-                        <img src="{{ asset($m['logo']) }}" title="{{ $m['name'] }}"
-                            class="w-5 h-5 rounded-full bg-white border">
-                    @endforeach
-
-                </div>
 
                 <span class="text-xs text-slate-400">
                     {{ $available->count() }} Marketplace

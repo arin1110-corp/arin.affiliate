@@ -155,9 +155,14 @@ class AuthController extends Controller
         | selama 3 bulan pertama.
         */
 
+        // Ambil paket yang dipilih user
+        $package = ModelPackage::where('package_slug', $request->package)->firstOrFail();
+
+        // Hitung jumlah user promo
         $totalPromoUser = ModelUser::where('user_role', 'client')->where('user_is_promo', true)->count();
 
-        $isPromo = $request->package === 'starter' && $totalPromoUser < 1000;
+        // Cek apakah paket ini masih mendapatkan promo
+        $isPromo = $package->package_slug === 'starter' && $totalPromoUser < 1000;
 
         $user = ModelUser::create([
             'user_nama' => $request->user_nama,
@@ -170,34 +175,35 @@ class AuthController extends Controller
             'user_subdomain' => $slug,
 
             'user_role' => 'client',
-            'user_package' => $request->package,
 
+            // Paket
+            'package_id' => $package->package_id,
+            'user_package' => $package->package_slug,
+
+            // Promo
             'user_is_promo' => $isPromo,
             'user_promo_batch' => $isPromo ? 1 : null,
-            'user_promo_price' => $isPromo ? 14900 : null,
+            'user_promo_price' => $isPromo ? $package->package_harga_promo : $package->package_harga_normal,
 
             'user_package_started_at' => now(),
             'user_promo_until' => $isPromo ? now()->addMonths(3) : null,
 
+            // Email Verification
             'user_email_verify_token' => $token,
             'user_email_verified_at' => null,
 
-            /*
-            | Trial 3 hari sebelum wajib bayar.
-            | Promo tetap dicatat, tapi trial hanya 3 hari.
-            */
+            // Trial
             'user_is_trial' => false,
             'user_trial_end_at' => null,
+
+            // Masa aktif
             'user_expired_at' => null,
 
+            // Pembayaran
             'user_payment_status' => 'unpaid',
             'user_is_active' => false,
 
-            /*
-            | Website aktif sementara selama trial.
-            | Setelah payment nanti expired_at diperpanjang.
-            */
-
+            // Theme Default
             'user_theme_primary' => '#ec4899',
             'user_theme_secondary' => '#fdf2f8',
         ]);
